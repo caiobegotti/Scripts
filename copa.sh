@@ -29,7 +29,7 @@ do
 	fi
 
 	# dados pra baixar os videos (salva lista de cada video listado em cada pagina diaria)
-	streaming_source="lynx -dump http://copa.esporte.uol.com.br/copa/2006/tv/ultnot/index${loop}.jhtm"
+	streaming_source="lynx -dump http://copa.esporte.uol.com.br/copa/2006/tv/ultnot/jogos/index${loop}.jhtm"
 	${streaming_source} | sed '/[0-9]\. /!d;/ultnot\/jogos/!d;s/^.* http:\/\///g' > /tmp/urls
 	
 	if [ -s /tmp/urls ]
@@ -105,6 +105,8 @@ tamanho=$(du -hsc $(find . -type f -iname *.wmv) | tail -n1 | sed 's/\t.*$//')
 echo -e "\n-------------------------------------------------------------------------------"
 echo -e "Download finalizado: ${quantidade} vídeos gravados em ${tamanho}"
 echo -e "-------------------------------------------------------------------------------\n"
+
+find . -mindepth 1 -type d | while read dir; do echo "partida ${dir:2} tem $(ls ${dir}/*.wmv | wc -l)/12 videos"; done
 
 beep=0
 while [ ${beep} -le 4 ]
