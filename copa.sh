@@ -10,7 +10,7 @@
 
 if [ -z ${1} ]
 then
-	loop="50" # acho que vai dar isso de paginas de videos ate o fim da copa
+	loop="60" # acho que vai dar isso de paginas de videos ate o fim da copa
 else
 	loop="${1}"
 fi
