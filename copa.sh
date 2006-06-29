@@ -65,6 +65,10 @@ do
 			${dcop} ${konqi} konqueror-mainwindow#1 openURL "${video_url}"
 			${dcop} ${konqi} konqueror-mainwindow#1 minimize
 
+			# que feiura...
+			killall -9 drkonqi
+			killall -9 kio_uiserver
+
 			echo -e "\n-------------------------------------------------------------------------------"
 			echo -e "Monitorando por dados do streaming para iniciar parsing"
 			echo -e "-------------------------------------------------------------------------------\n"
@@ -114,14 +118,14 @@ do
 	let "loop=loop-1"
 done
 
-quantidade=$(find . -type f -iname *.wmv | wc -l)
-tamanho=$(du -hsc $(find . -type f -iname *.wmv) | tail -n1 | sed 's/\t.*$//')
+quantidade=$(find . -type f -iname '*.wmv' | wc -l)
+tamanho=$(du -hsc $(find . -type f | grep '.wmv' ) | tail -n1 | sed 's/\t.*$//')
 
 echo -e "\n-------------------------------------------------------------------------------"
 echo -e "Download finalizado: ${quantidade} vídeos gravados em ${tamanho}"
 echo -e "-------------------------------------------------------------------------------\n"
 
-find . -mindepth 1 -type d | while read dir; do echo "partida ${dir:2} tem $(ls ${dir}/*.wmv | wc -l)/12 videos"; done
+find . -mindepth 1 -type d | while read dir; do echo "partida ${dir:2} tem $(ls ${dir}/*.wmv | wc -l)/12 videos"; done | sort
 
 beep=0
 while [ ${beep} -le 4 ]
