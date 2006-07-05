@@ -66,8 +66,8 @@ do
 			${dcop} ${konqi} konqueror-mainwindow#1 minimize
 
 			# que feiura...
-			killall -9 drkonqi
-			killall -9 kio_uiserver
+			killall -9 drkonqi &> /dev/null
+			killall -9 kio_uiserver &> /dev/null
 
 			echo -e "\n-------------------------------------------------------------------------------"
 			echo -e "Monitorando por dados do streaming para iniciar parsing"
