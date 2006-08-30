@@ -56,7 +56,7 @@ do
 
 			# se nao tiver um konqueror rodando, inicia um
 			${dcop} | grep konqueror &> /dev/null || ${konqueror} & &> /dev/null
-			sleep 5s
+			sleep 10s
 
 			# pega um konqueror ja aberto
 			konqi=$(${dcop} konqueror-* | tail -n1)
@@ -64,6 +64,7 @@ do
 			# abre uma nova URL com o streaming pra conectar
 			${dcop} ${konqi} konqueror-mainwindow#1 openURL "${video_url}"
 			${dcop} ${konqi} konqueror-mainwindow#1 minimize
+			sleep 10s
 
 			# que feiura...
 			killall -9 drkonqi &> /dev/null
@@ -83,7 +84,7 @@ do
 					then
 						# xunxa dados do streaming e bota filename em variavel
 						mv /tmp/kde-${USER}/konqueror*.tmp /tmp/control
-						movie=$(sed '/.wmv?/!d;s/^.* \"//;s/\".*$//' /tmp/control)
+						movie=$(sed '/.wmv?/!d;s/^.* \"//;s/\".*$//;s/_be/_bl/' /tmp/control)
 
 						# libera o konqi pra nao carregar o xine pro streaming
 						${dcop} ${konqi} konqueror-mainwindow#1 openURL "about:blank"
