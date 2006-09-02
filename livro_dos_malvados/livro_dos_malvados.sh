@@ -1,13 +1,16 @@
-#!/bin/bash -xev
+#!/bin/bash -ev
 #
 # Tue, 29 Aug 2006 20:16:44 -0300
 # caio begotti <caio@ueberalles.net>
+#
+# tamanhos de papel pra posicionamento das tirinhas
+# http://upload.wikimedia.org/wikipedia/commons/b/b8/A_size_illustration.gif
 
 url=http://www.malvados.com.br
 
 rm -rf tirinhas/* paginas/* pdf/* temp/* grupos/*
 
-for num in $(seq 200 210)
+for num in $(seq 600 650)
 do
 	tirinha=$(lynx --nolist -dump ${url}/index${num}.html | sed '/^$/d;s/[[:blank:]]\+//;/\[tir/!d;s/[][]\+//g')
 	# arquivo=$(echo ${tirinha} | sed 's/tiramalvados/tirinha/;s/tirainicial/tirinha1/;s/tirinhar/tirinha/')
@@ -23,17 +26,34 @@ find tirinhas/ -iname "*.raw" > tirinhas/cruas.txt
 
 while read cur in
 do
-	convert -resize 591x188! ${cur} ${cur}.tmp
-	convert ${cur}.tmp -mattecolor white -frame 50x20+1+1 $(echo ${cur} | sed 's/...$/png/')
+	convert -verbose -resize 591x188! ${cur} ${cur}.tmp
+	convert -verbose ${cur}.tmp -mattecolor white -frame 50x20-0-0 $(echo ${cur} | sed 's/...$/png/')
+
 done < tirinhas/cruas.txt
 
 ls -1 tirinhas/*.png > tirinhas/todas.txt
 
 while [ -s "tirinhas/todas.txt" ]
 do
-	sed '5q' tirinhas/todas.txt > grupos/$(echo $((RANDOM))).txt
-	sed -i '1,5d' tirinhas/todas.txt
+	sed '3q' tirinhas/todas.txt > grupos/$(echo $((RANDOM))).txt
+	sed -i '1,3d' tirinhas/todas.txt
 done
+
+for monte in grupos/*
+do
+	for tira in "$(cat ${monte})"
+	do
+		arquivo=$(echo $((RANDOM)))
+		convert -verbose ${tira} -append paginas/${arquivo}.tudo
+		convert -verbose paginas/${arquivo}.tudo -mattecolor white -frame 0x20-0-0 paginas/${arquivo}.page
+		convert -verbose paginas/${arquivo}.page -fill white -box '#000000' -gravity North -annotate +0+0 '   127   ' paginas/${arquivo}.copy
+		convert -verbose paginas/${arquivo}.copy -gravity South -background White -splice 0x0 -draw "text 0,0 'Malvados é criação de André Dahmer. Todos os direitos reservados.'" paginas/${arquivo}.borda
+		convert -verbose paginas/${arquivo}.borda -mattecolor white -frame 10x10+0+1 paginas/${arquivo}.png
+
+	done
+done
+
+convert -verbose paginas/*.png -append pdf/$(date +%y%m%d).pdf
 
 exit 0
 
@@ -44,30 +64,25 @@ exit 0
 # 3. pega informacoes de todas as tirinhas		OK
 # 4. deixa todas as tirinhas com o mesmo tamanho	OK
 # 5. cria lista de tirinhas e separa em grupos de 5	OK
-# 6. monta paginas inteiras cruas com as 5 tiras
-# 7. cria moldura delas com labels de (tm) e numero
+# 6. monta paginas inteiras cruas com as 5 tiras	OK
+# 7. cria moldura delas com labels de (tm) e numero	OK
 # 8. insere cada pagina em um folha do PDF
 # 9. gerar o PDF final com capa, intro 
 
 # pra botar borda branca na tira individual
-convert input.gif -mattecolor white -frame 50x50+1+1 output.png
+convert input.gif -mattecolor white -frame 50x20-0-0 output.png
 
 # juntar varias tiras em uma imagem
-convert 1.jpg 2.jpg 3.jpg -append malvados.jpg
+convert 1.png 2.png * -append malvados.jpg
 
-# botar legenda na pagina cheia de tirinhas
-convert pagina.png -gravity North -background White -splice 0x18 -draw "text 0,0 'Malvados é criação de André Dahmer (www.malvados.com.br). Todos os direitos reservados ao autor original.'" final.png
+# bota bordinha "style", soh pra dizer que tem
+convert final.png -mattecolor white -frame 50x50+0+1 final.png
 
-# adicionar notas de copyright as paginas
-montage -geometry +0+0 -background Black -fill white -label "- PÁGINA 7 -" final.png ok.png
+# adiciona pagina na parte de cima
+convert 1.png -fill white -box '#000000' -gravity North -annotate +0+0 '   024   ' final.png
 
-# pegar tamanho das imagens no formato do imagemagick
-identify tirinha300.gif | cut -d" " -f4
-identify 20060830223050.raw | cut -d" " -f4 | sed 's/x.*$//'
-identify 20060830223050.raw | cut -d" " -f4 | sed 's/^.*x//;s/+.*$//'
+# botar copyright na pagina cheia de tirinhas
+convert foo.png -gravity South -background White -splice 0x0 -draw "text 0,0 'Malvados é criação de André Dahmer. Todos os direitos reservados.'" final.png
 
-# pegar a data de modificacao (criacao) do arquivo
-stat tirinha300.gif | sed '/[Mm]odify/!d;s/^.\{8\}//;s/ .*$//'
-
-# pega o numero da tirinha (do arquivo real)
-echo tirinha25.gif | sed 's/[[:alpha:]]\+//;s/....$//'
+# gera um pdf a partir do template HTML com paginas
+htmldoc --book template.html --left 0 --right 0 --top 0 --bottom 0 --size 50x50mm -t pdf14 > foo.pdf
