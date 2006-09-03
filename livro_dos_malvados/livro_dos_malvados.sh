@@ -5,29 +5,37 @@
 #
 # tamanhos de papel pra posicionamento das tirinhas
 # http://upload.wikimedia.org/wikipedia/commons/b/b8/A_size_illustration.gif
+# livro do calvin e hobbes tem 830 de largura por 870 de altura
 
 url=http://www.malvados.com.br
 
-rm -rf tirinhas/* paginas/* pdf/* temp/* grupos/*
+rm -rf tirinhas/* 
+rm -rf paginas/* 
+rm -rf pdf/* 
+rm -rf temp/* 
+rm -rf grupos/*
 
-for num in $(seq 600 650)
+for num in $(seq 1 999)
 do
 	tirinha=$(lynx --nolist -dump ${url}/index${num}.html | sed '/^$/d;s/[[:blank:]]\+//;/\[tir/!d;s/[][]\+//g')
 	# arquivo=$(echo ${tirinha} | sed 's/tiramalvados/tirinha/;s/tirainicial/tirinha1/;s/tirinhar/tirinha/')
 
-	arquivo=$(date +%Y%m%d%H%M%S).raw
+	arquivo=$(date +%Y%m%d%H%M%S).foo
 	wget -N -q -c ${url}/${tirinha} -O tirinhas/${arquivo}
 	echo "... baixando imagem ${arquivo} que era ... ${tirinha}"
 done
 
 for tira in tirinhas/*; do file ${tira} | grep HTML && rm -rf ${tira}; done
 
-find tirinhas/ -iname "*.raw" > tirinhas/cruas.txt
+find tirinhas/ -iname "*.foo" > tirinhas/cruas.txt
 
 while read cur in
 do
-	convert -verbose -resize 591x188! ${cur} ${cur}.tmp
-	convert -verbose ${cur}.tmp -mattecolor white -frame 50x20-0-0 $(echo ${cur} | sed 's/...$/png/')
+	convert -resize 591x188! ${cur} ${cur}.ok
+	sleep 1
+
+	convert ${cur}.ok -mattecolor white -frame 50x20-0-0 ${cur}.png
+	sleep 1
 
 done < tirinhas/cruas.txt
 
@@ -44,16 +52,26 @@ do
 	for tira in "$(cat ${monte})"
 	do
 		arquivo=$(echo $((RANDOM)))
-		convert -verbose ${tira} -append paginas/${arquivo}.tudo
-		convert -verbose paginas/${arquivo}.tudo -mattecolor white -frame 0x20-0-0 paginas/${arquivo}.page
-		convert -verbose paginas/${arquivo}.page -fill white -box '#000000' -gravity North -annotate +0+0 '   127   ' paginas/${arquivo}.copy
-		convert -verbose paginas/${arquivo}.copy -gravity South -background White -splice 0x0 -draw "text 0,0 'Malvados é criação de André Dahmer. Todos os direitos reservados.'" paginas/${arquivo}.borda
-		convert -verbose paginas/${arquivo}.borda -mattecolor white -frame 10x10+0+1 paginas/${arquivo}.png
+
+		convert ${tira} -append paginas/${arquivo}.tudo
+		sleep 1
+
+		convert paginas/${arquivo}.tudo -mattecolor white -frame 0x20-0-0 paginas/${arquivo}.page
+		sleep 1
+
+		convert paginas/${arquivo}.page -fill white -box '#000000' -gravity North -annotate +0+0 '   MALVADOS   ' paginas/${arquivo}.copy
+		sleep 1
+
+		convert paginas/${arquivo}.copy -gravity South -background White -splice 0x0 -draw "text 0,0 'Malvados é criação de André Dahmer. Todos os direitos reservados.'" paginas/${arquivo}.borda
+		sleep 1
+
+		convert paginas/${arquivo}.borda -mattecolor white -frame 10x10+0+1 paginas/${arquivo}.pdf
+		sleep 1
 
 	done
 done
 
-convert -verbose paginas/*.png -append pdf/$(date +%y%m%d).pdf
+pdftk paginas/*.pdf cat output pdf/$(date +%Y%m%d).pdf
 
 exit 0
 
@@ -85,4 +103,4 @@ convert 1.png -fill white -box '#000000' -gravity North -annotate +0+0 '   024  
 convert foo.png -gravity South -background White -splice 0x0 -draw "text 0,0 'Malvados é criação de André Dahmer. Todos os direitos reservados.'" final.png
 
 # gera um pdf a partir do template HTML com paginas
-htmldoc --book template.html --left 0 --right 0 --top 0 --bottom 0 --size 50x50mm -t pdf14 > foo.pdf
+pdftk *.pdf cat output caio.pdf
