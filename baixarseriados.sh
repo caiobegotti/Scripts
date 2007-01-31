@@ -50,7 +50,7 @@ function do_sub()
         id=$(grep ${current} ${data} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
 
         # baixa o .zip ou .rar ou whatever...
-        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O ${current}
+        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}"
 
     done < ${list}
 }
@@ -100,7 +100,7 @@ function do_fetch()
             do_cry 'Opa, opa! O endereco pra download estava vazio...\n'
         else
             do_cry "Baixando o .torrent do video ${current}\n"
-            wget -q ${url} -O "${current}"
+            wget -q ${url} -O "${current}.torrent"
         fi
 
     done < ${search_res}
