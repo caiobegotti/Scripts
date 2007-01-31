@@ -56,7 +56,7 @@ function do_search()
     done
     
     # concatena todas as paginas em uma soh
-    cat ${search_res}.* | sort -n > ${search_res}
+    cat ${search_res}.* | uniq | sort -n > ${search_res}
     
     do_cry "Processando os videos encontrados abaixo:\n"
     do_cry "$(cat ${search_res})\n"
@@ -75,9 +75,14 @@ function do_fetch()
         # filtra a URL do torrent do site Snarf-It.org e baixa o bendito arquivo
         do_cry "Filtrando os melhores arquivos .torrent pra baixar..."
         url=$(sed '/pigbox-small-container"/,/Blog Posts/!d;/list-name-row/!d;s/^.*viewTorrent//g;s/html".*$//;s/$/torrent/;s/^/www.snarf-it.org\/downloadTorrent/' ${temp} | head -1)
-
-        do_cry "Baixando o .torrent do video ${current}\n"
-        wget -q ${url} -O "${current}"
+        
+        if [ -z ${url} ]
+        then
+            do_cry 'Opa, opa! O endereco pra download estava vazio...\n'
+        else
+            do_cry "Baixando o .torrent do video ${current}\n"
+            wget -q ${url} -O "${current}"
+        fi
 
     done < ${search_res}
 }
