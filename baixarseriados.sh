@@ -1,4 +1,4 @@
-#!/bin/bash -xev
+#!/bin/bash
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -42,6 +42,8 @@ function do_sub()
     data="${1}"
     list="${2}"
 
+    do_cry "Fazendo o download de todas as legendas compactadas...\n"
+    
     while read current
     do
         # pega o ID numerico da legenda para baixa-la
