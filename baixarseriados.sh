@@ -69,7 +69,7 @@ function do_fetch()
         temp=$(mktemp)
 
         # busca e ordena por numero de downloads o hit do torrent... pra baixar o mais "pop"
-        do_cry "Buscando arquivos .torrent ${current} no site de indice..."
+        do_cry "Buscando arquivos .torrent ${current} no site de indices..."
         lynx --nolist -source "http://www.snarf-it.org/pages/search.html?category=0x0&query=${current}&orderBy=3&orderByDir=1" > ${temp}
         
         # filtra a URL do torrent do site Snarf-It.org e baixa o bendito arquivo
