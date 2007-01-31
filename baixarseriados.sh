@@ -37,6 +37,22 @@ function do_login()
     wget -q --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
 }
 
+function do_sub()
+{
+    list="${1}"
+    echo ${list}
+    
+    while read current
+    do
+        # pega o ID numerico da legenda para baixa-la
+        id=$(grep ${current} ${list} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
+
+        # baixa o .zip ou .rar ou whatever...
+        wget "http://legendas.tv/info.php?d=${id}&c=1" -O ${current}
+
+    done < ${list}
+}
+
 function do_search()
 {
     search_res=$(mktemp)
@@ -60,6 +76,7 @@ function do_search()
     
     do_cry "Processando os videos encontrados abaixo:\n"
     do_cry "$(cat ${search_res})\n"
+    do_sub "${search_res}"
 }
 
 function do_fetch()
