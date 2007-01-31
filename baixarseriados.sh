@@ -34,11 +34,27 @@ function do_search()
     search_res=$(mktemp)
 
     wget --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
-    grep -i 'gold\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}.new
+    grep -i 'gold\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
+    cat ${search_res}
+}
 
+function do_fetch()
+{
+    while read current
+    do
+        file=$(mktemp)
+
+        download=$(lynx --nolist -dump "http://www.google.com/search?q=${current}&sourceid=mozilla&start=0&start=0&ie=utf-8&oe=utf-8" |  sed '/thepiratebay.org\/tor/!d;s/-.*$//g' | head -1)
+        wget "$(echo ${download})" -O ${file}.html
+
+        url=$(grep hashtorrent ${file}.html | head -1 | sed 's/^.*href="//g;s/".*$//g')
+        wget ${url}
+
+    done < ${search_res}
 }
 
 do_login
 do_search
+do_fetch
 
 exit 0
