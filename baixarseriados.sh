@@ -22,15 +22,17 @@ login_name="${1}"
 login_pass="${2}"
 subtitle="${3}"
 
+bolachinhas=$(mktemp)
+
 function do_login()
 {
-    wget --keep-session-cookies --save-cookies /tmp/cuqui.txt --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
+    wget --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
 }
 
 function do_search()
 {
     search_res=$(mktemp)
-    wget --load-cookies /tmp/cuqui.txt --post-data="txtLegenda=${subtitle}" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
+    wget --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
 }
 
 do_login
