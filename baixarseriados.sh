@@ -1,4 +1,4 @@
-#!/bin/bash -xev
+#!/bin/bash
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -33,7 +33,7 @@ function do_cry()
 
 function do_login()
 {
-    do_cry "Logando no site de legendas..."
+    do_cry "Logando no site de legendas e salvando as bolachinhas..."
     wget -q --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
 }
 
@@ -45,19 +45,20 @@ function do_search()
 
     # como resultados bons pode ter sido paginados...
     # vamos aumentar a lista deles
-    for paging in $(seq 1 5)
+    for paging in $(seq 0 4)
     do
-        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}.${paging}
+        # baixa uma pagina de resultados pra filtrar
+        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}
+
+        # limpa a sujeirada que voltou da pesquisa meio que por cima somente...
+        grep -i 'gold\|prata\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
+        cp ${search_res} ${search_res}.${paging}
     done
-
+    
     # concatena todas as paginas em uma soh
-    cat ${search_res}.* > ${search_res}
-
-    # limpa a sujeirada que voltou da pesquisa meio que por cima somente...
-    grep -i 'gold\|prata\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
-
-    # exibe a lista, ai o usuario sabe se tem duplicatas em caixa alta, baixa etc
-    do_cry "Os seguintes titulos legendados foram encontrados:\n"
+    cat ${search_res}.* | sort -n > ${search_res}
+    
+    do_cry "Processando os videos encontrados abaixo:\n"
     do_cry "$(cat ${search_res})\n"
 }
 
