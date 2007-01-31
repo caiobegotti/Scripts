@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xev
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -39,16 +39,16 @@ function do_login()
 
 function do_sub()
 {
-    list="${1}"
-    echo ${list}
-    
+    data="${1}"
+    list="${2}"
+
     while read current
     do
         # pega o ID numerico da legenda para baixa-la
-        id=$(grep ${current} ${list} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
+        id=$(grep ${current} ${data} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
 
         # baixa o .zip ou .rar ou whatever...
-        wget "http://legendas.tv/info.php?d=${id}&c=1" -O ${current}
+        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O ${current}
 
     done < ${list}
 }
@@ -64,19 +64,19 @@ function do_search()
     for paging in $(seq 0 4)
     do
         # baixa uma pagina de resultados pra filtrar
-        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}
+        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}.${paging}
 
         # limpa a sujeirada que voltou da pesquisa meio que por cima somente...
-        grep -i 'gold\|prata\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
-        cp ${search_res} ${search_res}.${paging}
+        grep -i 'gold\|prata\|bronze' ${search_res}.${paging} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}.${paging}.raw
     done
     
     # concatena todas as paginas em uma soh
-    cat ${search_res}.* | uniq | sort -n > ${search_res}
+    cat ${search_res}*.raw | uniq | sort -n > ${search_res}
+    cat ${search_res}.[0-4] > ${search_res}.raw
     
     do_cry "Processando os videos encontrados abaixo:\n"
     do_cry "$(cat ${search_res})\n"
-    do_sub "${search_res}"
+    do_sub "${search_res}.raw" "${search_res}"
 }
 
 function do_fetch()
