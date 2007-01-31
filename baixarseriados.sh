@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xev
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -42,10 +42,19 @@ function do_search()
     search_res=$(mktemp)
 
     do_cry "Pesquisando titulos mais novos e populares de '${subtitle}'..."
-    wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
+
+    # como resultados bons pode ter sido paginados...
+    # vamos aumentar a lista deles
+    for paging in $(seq 1 5)
+    do
+        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}.${paging}
+    done
+
+    # concatena todas as paginas em uma soh
+    cat ${search_res}.* > ${search_res}
 
     # limpa a sujeirada que voltou da pesquisa meio que por cima somente...
-    grep -i 'gold\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
+    grep -i 'gold\|prata\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}
 
     # exibe a lista, ai o usuario sabe se tem duplicatas em caixa alta, baixa etc
     do_cry "Os seguintes titulos legendados foram encontrados:\n"
