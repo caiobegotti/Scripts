@@ -32,7 +32,10 @@ function do_login()
 function do_search()
 {
     search_res=$(mktemp)
-    wget --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
+
+    wget --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" http://legendas.tv/index.php?opcao=buscarlegenda -O ${search_res}
+    grep -i 'gold\|bronze' ${search_res} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}.new
+
 }
 
 do_login
