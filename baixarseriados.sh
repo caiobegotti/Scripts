@@ -37,7 +37,7 @@ function do_login()
     wget -q --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
 }
 
-function do_sub()
+function do_sub_get()
 {
     data="${1}"
     list="${2}"
@@ -50,9 +50,29 @@ function do_sub()
         id=$(grep ${current} ${data} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
 
         # baixa o .zip ou .rar ou whatever...
-        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}"
+        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
+    do_sub_extract
+}
+
+function do_sub_extract()
+{
+    do_cry "Descompactando as legendas baixadas..."
+
+    for file in *.pack
+    do
+        if file ${file} | grep -i 'rar archive'
+        then
+            # pega soh a legenda e exclui o resto
+            sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g')
+            unrar e ${file} ${sub} && rm -rf ${file}
+        else
+            # pega soh a legenda e exclui o resto
+            sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //')
+            unzip ${file} ${sub} && rm -rf ${file}
+        fi
+    done
 }
 
 function do_search()
@@ -78,7 +98,9 @@ function do_search()
     
     do_cry "Processando os videos encontrados abaixo:\n"
     do_cry "$(cat ${search_res})\n"
-    do_sub "${search_res}.raw" "${search_res}"
+
+    # naturalmente, a funcao que baixa tudo...
+    do_sub_get "${search_res}.raw" "${search_res}"
 }
 
 function do_fetch()
