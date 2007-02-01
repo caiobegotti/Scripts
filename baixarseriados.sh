@@ -1,24 +1,9 @@
-#!/bin/bash -xev
+#!/bin/bash
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
 #
-# 1. logar no site
-#
-# 2. fazer busca do seriado
-#    e filtrar num. de downloads
-#
-# 3. parsear pra pegar o filename
-#    dados e informacoes
-#
-# 4. busca do filename
-#    google, piratebay, torrentspy
-#
-# 5. baixar o .torrent
-#
-# 6. renomear arquivos
-#
-# E o OpenSubtitles.org?
+# e o opensubtitles.org? bota onde?
 
 login_name="${1}"
 login_pass="${2}"
@@ -42,7 +27,7 @@ function do_sub_get()
     data="${1}"
     list="${2}"
 
-    do_cry "Fazendo o download de todas as legendas compactadas...\n"
+    do_cry "Fazendo o download de todas as legendas compactadas..."
     
     while read current
     do
@@ -58,19 +43,19 @@ function do_sub_get()
 
 function do_sub_extract()
 {
-    do_cry "Descompactando as legendas baixadas..."
+    do_cry "Descompactando as legendas baixadas...\n"
 
     for file in *.pack
     do
-        if file ${file} | grep -i 'rar archive'
+        if file ${file} | grep -iq 'rar archive'
         then
             # pega soh a legenda e exclui o resto
-            sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g' &> /dev/null)
-            unrar -o+ e ${file} "${sub}" && rm -rf ${file} &> /dev/null
+            sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g;s/^ \+//g')
+            unrar -o+ e ${file} "${sub}" &> /dev/null && rm -rf ${file}
         else
             # pega soh a legenda e exclui o resto
-            sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //' &> /dev/null)
-            unzip -o ${file} "${sub}" && rm -rf ${file} &> /dev/null
+            sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //;s/^ \+//g')
+            unzip -o ${file} "${sub}" &> /dev/null && rm -rf ${file}
         fi
     done
 }
