@@ -49,13 +49,15 @@ function do_sub_extract()
     do
         if file ${file} | grep -iq 'rar archive'
         then
-            # pega soh a legenda e exclui o resto
+            # pega soh a legenda, exclui o resto e renomeia
             sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g;s/^ \+//g')
             unrar -o+ e ${file} "${sub}" &> /dev/null && rm -rf ${file}
+            mv "${sub}" $(echo ${file} | sed 's/.pack$//').srt
         else
-            # pega soh a legenda e exclui o resto
+            # pega soh a legenda, exclui o resto e renomeia
             sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //;s/^ \+//g')
             unzip -o ${file} "${sub}" &> /dev/null && rm -rf ${file}
+            mv "${sub}" $(echo ${file} | sed 's/.pack$//').srt
         fi
     done
 }
