@@ -52,12 +52,12 @@ function do_sub_extract()
             # pega soh a legenda, exclui o resto e renomeia
             sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g;s/^ \+//g')
             unrar -o+ e ${file} "${sub}" &> /dev/null && rm -rf ${file}
-            mv "${sub}" $(echo ${file} | sed 's/.pack$//').srt
+            mv -fu "${sub}" $(echo ${file} | sed 's/.pack$//').srt &>/dev/null
         else
             # pega soh a legenda, exclui o resto e renomeia
             sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //;s/^ \+//g')
             unzip -o ${file} "${sub}" &> /dev/null && rm -rf ${file}
-            mv "${sub}" $(echo ${file} | sed 's/.pack$//').srt
+            mv -fu "${sub}" $(echo ${file} | sed 's/.pack$//').srt &> /dev/null
         fi
     done
 }
