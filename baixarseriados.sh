@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xev
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -65,12 +65,12 @@ function do_sub_extract()
         if file ${file} | grep -i 'rar archive'
         then
             # pega soh a legenda e exclui o resto
-            sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g')
-            unrar e ${file} ${sub} && rm -rf ${file}
+            sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g' &> /dev/null)
+            unrar -o+ e ${file} "${sub}" && rm -rf ${file} &> /dev/null
         else
             # pega soh a legenda e exclui o resto
-            sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //')
-            unzip ${file} ${sub} && rm -rf ${file}
+            sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //' &> /dev/null)
+            unzip -o ${file} "${sub}" && rm -rf ${file} &> /dev/null
         fi
     done
 }
