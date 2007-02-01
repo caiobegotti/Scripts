@@ -3,7 +3,7 @@
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
 #
-# e o opensubtitles.org? bota onde?
+# TODO: e quando estourar o limite diario do snarf-it? e o opensubtitles.org?
 
 login_name="${1}"
 login_pass="${2}"
