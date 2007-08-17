@@ -10,9 +10,9 @@
 # prefix="didE i po ut Zatepu"
 # sufix="minE om pRi tizaRu tSe"
 
-echo -e "Write down a few word bases separted by space (e.g. 'kiRa lOmE'):" && read base
-echo -e "Now gimme some prefixes to use, also separted by space (e.g. 'po ut'):" && read prefix
-echo -e "Then, separted by comma, type a bunch of suffixes (e.g. 'om pRi'):" && read sufix
+echo -e "Write down a few word bases separated by space (e.g. 'kiRa lOmE'):" && read base
+echo -e "Now gimme some prefixes to use, also separated by space (e.g. 'po ut'):" && read prefix
+echo -e "Then, separated by space, type a bunch of suffixes (e.g. 'om pRi'):" && read sufix
 echo -e "---------------------------------------------------------------------\n"
 
 for mid in ${base}
