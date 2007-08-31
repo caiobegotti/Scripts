@@ -20,8 +20,8 @@ function main()
 {
 	for circ in ${circumfix}
 	do
-		circbeg=$(echo ${circumfix} | cut -d- -f1)
-		circend=$(echo ${circumfix} | cut -d- -f2)
+		circbeg=$(echo ${circ} | cut -d- -f1)
+		circend=$(echo ${circ} | cut -d- -f2)
 
 		for mid in ${base}
 		do
