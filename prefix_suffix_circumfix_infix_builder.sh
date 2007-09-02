@@ -6,12 +6,23 @@
 
 echo -e "\nWrite down a few word bases separated by space (e.g. 'kiRa lOmE'):" && read base
 echo -e "\nNow gimme some prefixes to use, also separated by space (e.g. 'po ut'):" && read prefix
-echo -e "\nThen, separated by space, type a bunch of suffixes (e.g. 'om pRi'):" && read sufix
+echo -e "\nThen, separated by space, type a bunch of suffixes (e.g. 'om pRi'):" && read suffix
 echo -e "\nOk, now type some circumfixes with '-' as delimiter (e.g. 'ar-tuO ka-fE'):" && read circumfix
+
 echo -e "\nTo finish it, give me one or two infixes if you want and their rules:"
 echo -e "(e.g. 'ing-..$' means 'infix ing before the last two phonemes in all words'"
-echo -e " or '^.-jo' that means 'infix jo after the first phoneme of every word')\n" && read infixes
+echo -e " or '^.-jo' that means 'infix jo after the first phoneme of every word')" && read infix
 
+echo -e "\nbases:"
+for item in ${base}; do echo -e "${item} "; done
+echo -e "\nprefixes:"
+for item in ${prefix}; do echo -e "${item} "; done
+echo -e "\nsuffixes:"
+for item in ${suffix}; do echo -e "${item} "; done
+echo -e "\ncircumfixes:"
+for item in ${circumfix}; do echo -e "${item} "; done
+echo -e "\ninfixes:"
+for item in ${infix}; do echo -e "${item} "; done
 
 function main()
 {
@@ -27,7 +38,7 @@ function main()
 			do
 				echo "${left}${mid}"
 				echo "${circbeg}${left}${mid}${circend}"
-				for right in ${sufix}
+				for right in ${suffix}
 				do
 					echo "${mid}${right}"
 					echo "${left}${mid}${right}"
