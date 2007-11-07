@@ -19,7 +19,7 @@ function do_cry()
 function do_login()
 {
     do_cry "Logando no site de legendas e salvando as bolachinhas..."
-    wget -q --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}" http://legendas.tv/login_verificar.php -O /dev/null
+    wget -q --keep-session-cookies --save-cookies ${bolachinhas} --post-data="txtLogin=${login_name}&txtSenha=${login_pass}&entrar.x=0&entrar.y=0" http://legendas.tv/login_verificar.php -O /dev/null
 }
 
 function do_sub_get()
@@ -32,12 +32,13 @@ function do_sub_get()
     while read current
     do
         # pega o ID numerico da legenda para baixa-la
-        id=$(grep ${current} ${data} | sed 's/^.*abredown(//;s/)/\n/g' | head -1)
-
+        id=$(grep ${current} ${data} | sed "s/^.*abredown(//;s/)/\n/g" | head -1)
         # baixa o .zip ou .rar ou whatever...
-        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
+        echo wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
+        wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
+    exit 0
     do_sub_extract
 }
 
@@ -73,14 +74,14 @@ function do_search()
     for paging in $(seq 0 4)
     do
         # baixa uma pagina de resultados pra filtrar
-        wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&int_idioma=1" "http://legendas.tv/index.php?row=${paging}&opcao=buscarlegenda" -O ${search_res}.${paging}
+	wget -q --load-cookies ${bolachinhas} --post-data="txtLegenda=${subtitle}&selTipo=1&int_idioma=1&btn_buscar.x=32&btn_buscar.y=5" "http://legendas.tv/index.php?opcao=buscarlegenda&row=${paging}" -O ${search_res}.${paging}
 
         # limpa a sujeirada que voltou da pesquisa meio que por cima somente...
-        grep -i 'gold\|prata\|bronze' ${search_res}.${paging} | sed "s/^.*alt='//g;s/<[^>]*>//g" | cut -d"'" -f1 | sed 's/[ /].*$//g' | sort -n | uniq > ${search_res}.${paging}.raw
+        grep -C 6 -i 'gold\|prata\|bronze' ${search_res}.${paging} | sed "s/^.*alt='//g;s/<[^>]*>//g" | sed '/[Rr]elease:/!d;s/^.*: //g' | sort -u > ${search_res}.${paging}.raw
     done
     
     # concatena todas as paginas em uma soh
-    cat ${search_res}*.raw | uniq | sort -n > ${search_res}
+    cat ${search_res}*.raw | sort -u | sort -n > ${search_res}
     cat ${search_res}.[0-4] > ${search_res}.raw
     
     do_cry "Processando os videos encontrados abaixo:\n"
