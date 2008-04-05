@@ -1,30 +1,21 @@
-property ScriptName : "iTunes Find Artwork-less"
-property scriptVersion : "1.0"
-property scriptDescription : "Find the songs with no Album Artwork set"
-
-
--- display dialog "Please specify the type of lyric search:" buttons {"Song being played on iTunes", "Specify song"} default button "Song being played on iTunes"
--- if the button returned of the result is "Song being played on iTunes" then
--- http://developer.apple.com/ipod/iPodNotesFeatureGuideCB.pdf
--- iPod Notes Feature Guide 
-
 (*
- - The Notes feature supports a maximum of 1,000 notes. If you try to put more than that number 
-in your iPod’s Notes folder hierarchy, only the first 1,000 will be loaded. 
- - The size of any single note is truncated to 4,096 bytes of text (about 1,000 words). 
- - Up to 64 kilobytes of note text is cached. If the text of a note is in the cache, the iPod doesn’t need 
-to spin its disk to display it. When 64 kilobytes of text have been cached, the oldest notes in the 
-cache are released as necessary to make room for new notes that are loaded. 
+	This is Caio Begotti's Lyrics4iPod AppleScript. Public Domain.
+	Fetched from <http://caio.ueberalles.net/svn/scripts/apple/>
+	
+	This was heavily inspired by the original code from Lyrics Snagger
+	written by Hendo <http://scriptbuilders.net/files/lyricssnagger1.1.html>
+	
+	It also uses large parts of the iPod Lyrics To Notes script, by
+	Doug Adams <http://dougscripts.com/itunes/pdf/ipodlyricstonotes.pdf>
 
-"iPod Lyrics To Notes" for iTunes
-http://www.dougscripts.com/itunes/
-
-Some of the routines in this script are based on
-ones originally published by Apple
-
-The idea for this script was originally suggested
-by Adam Wiseman at Mac OS X Hints.
-<http://www.macosxhints.com/article.php?story=20051024230056659>
+	If you're looking for more information on iPod Notes features
+	you might want to take a look at the updated PDF available at
+	<http://developer.apple.com/ipod/iPodNotesFeatureGuideCB.pdf>
+	
+	The Notes feature supports a maximum of 1,000 notes. If you try to put
+	more than that number in your iPod’s Notes folder hierarchy, only the first
+	1,000 will be loaded. The size of any single note is truncated to 4,096
+	bytes of text (about 1,000 words)
 *)
 
 property section_length : 3950
@@ -107,17 +98,16 @@ tell application "iTunes"
 					set theLyrics to text 1 thru -1 of (theLyrics as string)
 					set AppleScript's text item delimiters to ASTID
 					
-					set user_text to theLyrics
 					set file_name to theArtist & "-" & theSong & ".txt"
 					if file_name as string does not end with ".txt" then set file_name to ((file_name as string) & ".txt")
 					set {nom, alb, art, comp, lyr} to {get name, get album, get artist, get compilation, theLyrics}
 				end tell
+				
 				if lyr is not "" then
 					if alb is "" then set alb to "Unknown Album"
 					if art is "" then set alb to "Unknown Artist"
 					if comp is true then set art to "Compilations"
 					my make_lyricnote(nom, alb, art, lyr)
-					--my make_report(file_name, user_text)
 				end if
 			end timeout
 		end try
@@ -141,10 +131,6 @@ tell application "iTunes"
 	end if
 end tell
 
-to edittext(someText)
-	return do shell script "echo " & quoted form of someText & " | /usr/bin/ruby -ne 'print $_.delete(\"^a-z\", \"^A-Z\", \"^0-9\", \"^ \")'"
-end edittext
-
 to get_folder(foldername, folderparent)
 	try
 		tell application "Finder"
@@ -163,10 +149,8 @@ to get_folder(foldername, folderparent)
 end get_folder
 
 to make_lyricnote(nom, alb, art, lyr)
-	
 	set art_folder to my get_folder(art, ipod_lyrics_folder)
 	set alb_folder to my get_folder(alb, art_folder)
-	
 	set lyric_text to text_to_list(lyr, return)
 	
 	repeat
@@ -176,8 +160,8 @@ to make_lyricnote(nom, alb, art, lyr)
 			exit repeat
 		end if
 	end repeat
-	set lyric_text to list_to_text(lyric_text, "<br>")
 	
+	set lyric_text to list_to_text(lyric_text, "<br>")
 	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
 	
 	if write_note(new_content, ((alb_folder as string) & nom), false) is false then
@@ -235,6 +219,11 @@ on list_to_text(theList, delim)
 	return (txt)
 end list_to_text
 
+(*
+to edittext(someText)
+	return do shell script "echo " & quoted form of someText & " | /usr/bin/ruby -ne 'print $_.delete(\"^a-z\", \"^A-Z\", \"^0-9\", \"^ \")'"
+end edittext
+
 to make_report(file_name, user_text)
 	try
 		do shell script "rm " & quoted form of POSIX path of file_name
@@ -257,7 +246,4 @@ to make_report(file_name, user_text)
 		end if
 	end try
 end make_report
-
-on error_and_cancel(ms)
-	if gave up of (display dialog ms with icon 2 buttons {"Cancel"} default button 1 giving up after 15) then error number -128
-end error_and_cancel
+*)
