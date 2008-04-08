@@ -43,6 +43,7 @@ tell application "iTunes"
 	set ipod_source to (container of container of item 1 of sel)
 	if kind of ipod_source is not iPod then
 		display dialog "You must select an iPod playlist in order to fetch lyrics for its songs." buttons {"Abort"} default button 1 with icon 2 giving up after 15
+		return 128
 	end if
 	
 	set ipod_name to name of ipod_source
