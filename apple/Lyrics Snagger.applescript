@@ -1,7 +1,7 @@
 (*
 	-------------------------------------------------------------------------
 
-	This is Caio Begotti's Lyrics4iPod AppleScript. Public Domain FWIW.
+	This is Caio Begotti's Lyrics2iPod AppleScript. Public Domain FWIW.
 	Original from <http://caio.ueberalles.net/svn/scripts/apple/>
 	
 	INSTALL: copy this file to your folder "Library/Scripts/Applications/iTunes/"
