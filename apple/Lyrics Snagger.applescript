@@ -1,24 +1,28 @@
 (*
-	This is Caio Begotti's Lyrics4iPod AppleScript. Public Domain.
-	Fetched from <http://caio.ueberalles.net/svn/scripts/apple/>
+	-------------------------------------------------------------------------
+
+	This is Caio Begotti's Lyrics4iPod AppleScript. Public Domain FWIW.
+	Original from <http://caio.ueberalles.net/svn/scripts/apple/>
 	
+	INSTALL: copy this file to your folder "Library/Scripts/Applications/iTunes/"
+
+	INSTRUCTIONS: just select a random iPod's playlist with the songs you want
+	to fetch the lyrics for. Wait for a while until it's all grabbed from LyricWiki
+	
+	-------------------------------------------------------------------------
+		
 	This was heavily inspired by the original code from Lyrics Snagger
 	written by Hendo <http://scriptbuilders.net/files/lyricssnagger1.1.html>
 	
-	It also uses large parts of the iPod Lyrics To Notes script, by
+	It also uses some parts of the iPod Lyrics To Notes script, by
 	Doug Adams <http://dougscripts.com/itunes/pdf/ipodlyricstonotes.pdf>
 
 	If you're looking for more information on iPod Notes features
 	you might want to take a look at the updated PDF available at
 	<http://developer.apple.com/ipod/iPodNotesFeatureGuideCB.pdf>
 	
-	The Notes feature supports a maximum of 1,000 notes. If you try to put
-	more than that number in your iPodÕs Notes folder hierarchy, only the first
-	1,000 will be loaded. The size of any single note is truncated to 4,096
-	bytes of text (about 1,000 words)
+	-------------------------------------------------------------------------
 *)
-
-property section_length : 3950
 
 global ipod_source
 global ipod_name
@@ -26,8 +30,6 @@ global sel
 global theiPod
 global ipod_notes_folder
 global ipod_lyrics_folder
-global any_errors
-global lyrics_done
 
 tell application "iTunes"
 	if selection is {} then
@@ -40,37 +42,25 @@ tell application "iTunes"
 	
 	set ipod_source to (container of container of item 1 of sel)
 	if kind of ipod_source is not iPod then
-		display dialog "Select some iPod tracks or an iPod playlist..." buttons {"Cancel"} default button 1 with icon 2 giving up after 15
+		display dialog "You must select an iPod playlist in order to fetch lyrics for its songs." buttons {"Abort"} default button 1 with icon 2 giving up after 15
 	end if
 	
 	set ipod_name to name of ipod_source
+	set theiPod to ("/Volumes/" & ipod_name & "/") as POSIX file as alias
 	
-	try
-		if gave up of result is true then return
-	end try
-	
-	try
-		set theiPod to ("/Volumes/" & ipod_name & "/") as POSIX file as alias
-	on error m
-		display dialog "Error:" & return & return & m buttons {"Cancel"} with icon 0 giving up after 15
-		try
-			if gave up of result is true then return
-		end try
-		return
-	end try
-	
+	(* You may change the Lyrics folder but not Notes *)
 	set ipod_notes_folder to my get_folder("Notes", theiPod)
 	set ipod_lyrics_folder to my get_folder("Lyrics", ipod_notes_folder)
 	
-	set any_errors to 0
-	set lyrics_done to 0
 	repeat with this_track in sel
 		try
 			with timeout of 3000 seconds
 				tell this_track
+					(* Get the track and artist name from iTunes *)
 					set theSong to (get name)
 					set theArtist to (get artist)
 					
+					(* The following two blocks normalize the artist and song name *)
 					set ASTID to AppleScript's text item delimiters
 					set AppleScript's text item delimiters to {" "}
 					set theSong to text items of theSong
@@ -81,16 +71,20 @@ tell application "iTunes"
 					set theArtist to theArtist as Unicode text
 					set AppleScript's text item delimiters to {""}
 					
+					(* Fetch the lyrics for the given song and store it inside theLyrics *)
 					get "http://lyricwiki.org/" & theArtist & ":" & theSong
 					do shell script "/usr/bin/curl --user-agent '' " & quoted form of result
 					set theLyrics to result
 					
+					(* Select the lyrics part of the page dump *)
 					set AppleScript's text item delimiters to {"<div class='lyricbox' >"}
 					set theLyrics to (last text item of theLyrics) as Unicode text
 					
+					(* Until the box is closed *)
 					set AppleScript's text item delimiters to {"</div>"}
 					set theLyrics to first text item of theLyrics
 					
+					(* Split the lyrics, remove linebreaks *)
 					set AppleScript's text item delimiters to {"<br/>"}
 					set theLyrics to text items of theLyrics
 					
@@ -98,37 +92,26 @@ tell application "iTunes"
 					set theLyrics to text 1 thru -1 of (theLyrics as string)
 					set AppleScript's text item delimiters to ASTID
 					
+					(* Setting the lyrics filename on disk *)
 					set file_name to theArtist & "-" & theSong & ".txt"
 					if file_name as string does not end with ".txt" then set file_name to ((file_name as string) & ".txt")
+					
+					(* Ask iTunes for each song parameter but theLyrics *)
 					set {nom, alb, art, comp, lyr} to {get name, get album, get artist, get compilation, theLyrics}
 				end tell
 				
 				if lyr is not "" then
+					(* A little bit of sanitizing *)
 					if alb is "" then set alb to "Unknown Album"
 					if art is "" then set alb to "Unknown Artist"
 					if comp is true then set art to "Compilations"
+					
+					(* Call the function to create the lyrics file *)
 					my make_lyricnote(nom, alb, art, lyr)
 				end if
 			end timeout
 		end try
 	end repeat
-	
-	set addenda to ""
-	set icon_num to 1
-	
-	if any_errors is not 0 then
-		set icon_num to 2
-		set {s, tense} to {"s", "were "}
-		if any_errors = 1 then
-			set {s, tense} to {"", "was "}
-		end if
-		set addenda to (return & return & "There " & tense & any_errors & s & " with writing Lyric Notes.")
-	end if
-	
-	if lyrics_done is 0 then
-		set icon_num to 2
-		set addenda to (addenda & (return & return & "No lyrics were made into Notes.")) as string
-	end if
 end tell
 
 to get_folder(foldername, folderparent)
@@ -139,12 +122,6 @@ to get_folder(foldername, folderparent)
 			end if
 			return (folder foldername of folderparent) as alias
 		end tell
-	on error m
-		display dialog "Error:" & return & return & m buttons {"Cancel"} with icon 0 giving up after 15
-		try
-			if gave up of result is true then error number -128
-		end try
-		error number -128
 	end try
 end get_folder
 
@@ -161,18 +138,18 @@ to make_lyricnote(nom, alb, art, lyr)
 		end if
 	end repeat
 	
-	set lyric_text to list_to_text(lyric_text, "<br>")
-	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
+	(* Useful for cleaning the iPod-made lyrics: sed 's/<[^>]*>/|/g;s/^|//' theLyrics | tr '|' '\n' *)
 	
-	if write_note(new_content, ((alb_folder as string) & nom), false) is false then
-		set any_errors to any_errors + 1
-	else
-		set lyrics_done to lyrics_done + 1
-	end if
+	(* Function to split paragraphs *)
+	set lyric_text to list_to_text(lyric_text, "<br>")
+	
+	(* Assembling everything and writing the whole lyrics plus a clickable title *)
+	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
 end make_lyricnote
 
 on write_note(this_data, target_file, append_data)
 	try
+		(* This actually writes the lyrics to a file *)
 		set the target_file to the target_file as text
 		set the open_target_file to Â
 			open for access file target_file with write permission
@@ -180,10 +157,14 @@ on write_note(this_data, target_file, append_data)
 			set eof of the open_target_file to 0
 		write this_data to the open_target_file starting at eof as string
 		close access the open_target_file
+		
+		(* Does it contain the W3 address? Then it's an empty lyrics page *)
 		set filter to do shell script "grep -i www.w3.org " & quoted form of POSIX path of target_file
 		if filter is not "" then
+			(* We don't wanna store an error page, right? *)
 			do shell script "rm -rf " & quoted form of POSIX path of target_file
 		end if
+		
 		return true
 	on error
 		try
@@ -218,32 +199,3 @@ on list_to_text(theList, delim)
 	set AppleScript's text item delimiters to saveD
 	return (txt)
 end list_to_text
-
-(*
-to edittext(someText)
-	return do shell script "echo " & quoted form of someText & " | /usr/bin/ruby -ne 'print $_.delete(\"^a-z\", \"^A-Z\", \"^0-9\", \"^ \")'"
-end edittext
-
-to make_report(file_name, user_text)
-	try
-		do shell script "rm " & quoted form of POSIX path of file_name
-	end try
-	
-	try
-		set fileRefr to (a reference to (open for access file_name with write permission))
-		write user_text to fileRefr
-		close access fileRefr
-	on error errx number errNum from badObj
-		try
-			close access fileRefr
-		end try
-		log errNum
-		if (errNum is equal to -48) then
-			do shell script "rm " & quoted form of POSIX path of file_name
-			my make_report()
-		else
-			display dialog "There has been an error creating the file:" & return & return & (badObj as string) & errx & return & "error number: " & errNum buttons {"Cancel"}
-		end if
-	end try
-end make_report
-*)
