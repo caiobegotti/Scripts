@@ -150,8 +150,13 @@ to make_lyricnote(nom, alb, art, lyr)
 	(* Function to split paragraphs *)
 	set lyric_text to list_to_text(lyric_text, "<br>")
 	
-	(* Assembling everything and writing the whole lyrics plus a clickable title *)
-	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
+	(*
+	Assembling everything and writing the whole lyrics plus a clickable title:
+	the tag <meta name ÒNowPlayingÓ content=false> does not currently work,
+	at least on my iPod Nano 1.1, so it's safer to insert it as part of the link to
+	the song file... though it neeeds some testing on other modern iPods
+	*)
+	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "&NowPlaying=false\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
 	write_note(new_content, ((alb_folder as string) & nom), false)
 end make_lyricnote
 
