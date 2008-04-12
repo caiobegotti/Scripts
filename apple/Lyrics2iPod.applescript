@@ -24,6 +24,12 @@
 	-------------------------------------------------------------------------
 *)
 
+(* Do you want to save the lyrics as .txt for offline reading? *)
+set copy_to_desktop to yes
+
+(* Do you want to embed the lyrics into the song's file? *)
+set copy_to_itunes to yes
+
 global ipod_source
 global ipod_name
 global sel
@@ -146,6 +152,7 @@ to make_lyricnote(nom, alb, art, lyr)
 	
 	(* Assembling everything and writing the whole lyrics plus a clickable title *)
 	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
+	write_note(new_content, ((alb_folder as string) & nom), false)
 end make_lyricnote
 
 on write_note(this_data, target_file, append_data)
