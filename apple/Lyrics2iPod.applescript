@@ -27,7 +27,12 @@
 (* Do you want to save the lyrics as .txt for offline reading? *)
 set copy_to_desktop to yes
 
-(* Do you want to embed the lyrics into the song's file? *)
+(*
+  Do you want to embed the lyrics into the song file?
+  Why don't we just fetch the lyrics already available
+  from the song file? Because LyricWiki might get it updated
+  and I bet you want it.
+*)
 set copy_to_itunes to yes
 
 global ipod_source
@@ -151,10 +156,10 @@ to make_lyricnote(nom, alb, art, lyr)
 	set lyric_text to list_to_text(lyric_text, "<br>")
 	
 	(*
-	Assembling everything and writing the whole lyrics plus a clickable title:
-	the tag <meta name ÒNowPlayingÓ content=false> does not currently work,
-	at least on my iPod Nano 1.1, so it's safer to insert it as part of the link to
-	the song file... though it neeeds some testing on other modern iPods
+	  Assembling everything and writing the whole lyrics plus a clickable title:
+	  the tag <meta name ÒNowPlayingÓ content=false> does not currently work,
+	  at least on my iPod Nano 1.1, so it's safer to insert it as part of the link to
+	  the song file... though it neeeds some testing on other modern iPods
 	*)
 	set new_content to ("<a href=\"song=" & nom & "&artist=" & art & "&album=" & alb & "&NowPlaying=false\">" & nom & "</a>" & "<br><br>" & lyric_text) as Unicode text
 	write_note(new_content, ((alb_folder as string) & nom), false)
@@ -171,7 +176,7 @@ on write_note(this_data, target_file, append_data)
 		write this_data to the open_target_file starting at eof as string
 		close access the open_target_file
 		
-		(* Does it contain the W3 address? Then it's an empty lyrics page *)
+		(* Does it contain the W3 address? Then probably it's an empty lyrics page *)
 		set filter to do shell script "grep -i www.w3.org " & quoted form of POSIX path of target_file
 		if filter is not "" then
 			(* We don't wanna store an error page, right? *)
