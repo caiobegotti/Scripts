@@ -41,7 +41,6 @@ function do_sub_get()
         wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
-    exit 0
     do_sub_extract
 }
 
