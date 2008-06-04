@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
@@ -27,12 +27,15 @@ function do_sub_get()
     data="${1}"
     list="${2}"
 
+    # sanity check
+    sed -i 's/[[:cntrl:]]//g' ${list}
+
     do_cry "Fazendo o download de todas as legendas compactadas..."
     
     while read current
     do
         # pega o ID numerico da legenda para baixa-la
-        id=$(grep ${current} ${data} | sed "s/^.*abredown(//;s/)/\n/g" | head -1)
+        id=$(grep ${current} ${data} | sed "s/^.*abredown(//;s/)/\n/g;s/'//g" | head -1)
         # baixa o .zip ou .rar ou whatever...
         echo wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
         wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
