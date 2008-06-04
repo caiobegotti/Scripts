@@ -53,7 +53,7 @@ function do_sub_extract()
         then
             # pega soh a legenda, exclui o resto e renomeia
             sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g;s/^ \+//g')
-            unrar -o+ e ${file} "${sub}" &> /dev/null && rm -rf ${file}
+            unrar -x ${file} "${sub}" &> /dev/null && rm -rf ${file}
             mv -fu "${sub}" $(echo ${file} | sed 's/.pack$//').srt &>/dev/null
         else
             # pega soh a legenda, exclui o resto e renomeia
