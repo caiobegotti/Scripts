@@ -41,7 +41,6 @@ function do_sub_get()
         wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
-    do_sub_extract
 }
 
 function do_sub_extract()
@@ -101,18 +100,21 @@ function do_fetch()
 
         # busca e ordena por numero de downloads o hit do torrent... pra baixar o mais "pop"
         do_cry "Buscando arquivos .torrent ${current} no site de indices..."
-        lynx --nolist -source "http://www.snarf-it.org/pages/search.html?category=0x0&query=${current}&orderBy=3&orderByDir=1" > ${temp}
+        lynx --nolist -source "http://thepiratebay.org/search/${current}/0/99/0" > ${temp}
         
-        # filtra a URL do torrent do site Snarf-It.org e baixa o bendito arquivo
+        # filtra a URL do torrent do site The Pirate Bay e baixa o bendito arquivo
         do_cry "Filtrando os melhores arquivos .torrent pra baixar..."
-        url=$(sed '/pigbox-small-container"/,/Blog Posts/!d;/list-name-row/!d;s/^.*viewTorrent//g;s/html".*$//;s/$/torrent/;s/^/www.snarf-it.org\/downloadTorrent/' ${temp} | head -1)
+        url=http://thepiratebay.org/tor/$(sed '/href="\/tor\//!d;s/" class.*$//;s/^.*\/tor\///' /root/tmp/tmp.HYNEK29637 ${temp} | head -1)
         
         if [ -z ${url} ]
         then
             do_cry 'Opa, opa! O endereco pra download estava vazio...\n'
         else
+	    lynx --nolist -source ${url} > ${temp}
+	    remotefile=$(sed '/torrents.thepiratebay.org.*.TPB.torrent/!d;s/^.*http:\/\///;s/".*$//' ${temp} | head -1)
+	
             do_cry "Baixando o .torrent do video ${current}\n"
-            wget -q ${url} -O "${current}.torrent"
+            wget -q ${remotefile} -O "${current}.torrent"
         fi
 
     done < ${search_res}
@@ -123,5 +125,6 @@ clear
 do_login
 do_search
 do_fetch
+do_sub_extract
 
 exit 0
