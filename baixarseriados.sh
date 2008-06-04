@@ -1,9 +1,7 @@
-#!/bin/bash
+#!/bin/bash 
 #
 # script que baixa legendas e seriados populares via torrent automagicamente
 # caio begotti <caio@ueberalles.net> on Tue, 30 Jan 2007 14:57:51 +0000
-#
-# TODO: e quando estourar o limite diario do snarf-it? e o opensubtitles.org?
 
 login_name="${1}"
 login_pass="${2}"
@@ -27,9 +25,6 @@ function do_sub_get()
     data="${1}"
     list="${2}"
 
-    # sanity check
-    sed -i 's/[[:cntrl:]]//g' ${list}
-
     do_cry "Fazendo o download de todas as legendas compactadas..."
     
     while read current
@@ -37,6 +32,7 @@ function do_sub_get()
         # pega o ID numerico da legenda para baixa-la
         id=$(grep ${current} ${data} | sed "s/^.*abredown(//;s/)/\n/g;s/'//g" | head -1)
         # baixa o .zip ou .rar ou whatever...
+	do_cry "${current}"
         wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
@@ -86,7 +82,11 @@ function do_search()
     cat ${search_res}*.raw | sort -u | sort -n > ${search_res}
     cat ${search_res}.[0-4] > ${search_res}.raw
     
-    do_cry "Processando os videos encontrados abaixo:\n"
+    # sanity check
+    sed -i 's/[[:cntrl:]]//g' ${search_res}
+    sed -i 's/\/.*//' ${search_res}
+    
+    do_cry "Processando os videos encontrados abaixo:"
     do_cry "$(cat ${search_res})\n"
 
     # naturalmente, a funcao que baixa tudo...
@@ -100,22 +100,24 @@ function do_fetch()
         temp=$(mktemp)
 
         # busca e ordena por numero de downloads o hit do torrent... pra baixar o mais "pop"
-        do_cry "Buscando arquivos .torrent ${current} no site de indices..."
         lynx --nolist -source "http://thepiratebay.org/search/${current}/0/99/0" > ${temp}
         
         # filtra a URL do torrent do site The Pirate Bay e baixa o bendito arquivo
-        do_cry "Filtrando os melhores arquivos .torrent pra baixar..."
-        url=http://thepiratebay.org/tor/$(sed '/href="\/tor\//!d;s/" class.*$//;s/^.*\/tor\///' /root/tmp/tmp.HYNEK29637 ${temp} | head -1)
+        url=http://thepiratebay.org/tor/$(sed '/href="\/tor\//!d;s/" class.*$//;s/^.*\/tor\///' ${temp} | head -1)
         
         if [ -z ${url} ]
         then
-            do_cry 'Opa, opa! O endereco pra download estava vazio...\n'
+            do_cry "\nOpa, opa. O endereco pra download estava vazio...\n"
         else
 	    lynx --nolist -source ${url} > ${temp}
 	    remotefile=$(sed '/torrents.thepiratebay.org.*.TPB.torrent/!d;s/^.*http:\/\///;s/".*$//' ${temp} | head -1)
 	
-            do_cry "Baixando o .torrent do video ${current}\n"
-            wget -q ${remotefile} -O "${current}.torrent"
+	    if [ ! -z ${remotefile} ]; then
+		    do_cry "Baixando o .torrent do video ${current}"
+		    wget -q ${remotefile} -O "${current}.torrent"
+	    else
+		    do_cry "Torrent ${current} nao encontrado, baixe de outro lugar :-("
+	    fi
         fi
 
     done < ${search_res}
