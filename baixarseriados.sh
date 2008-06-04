@@ -37,8 +37,7 @@ function do_sub_get()
         # pega o ID numerico da legenda para baixa-la
         id=$(grep ${current} ${data} | sed "s/^.*abredown(//;s/)/\n/g;s/'//g" | head -1)
         # baixa o .zip ou .rar ou whatever...
-        echo wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
-        wget --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
+        wget -q --load-cookies ${bolachinhas} "http://legendas.tv/info.php?d=${id}&c=1" -O "${current}".pack
 
     done < ${list}
 }
@@ -55,11 +54,13 @@ function do_sub_extract()
             sub=$(unrar l ${file} | sed '/.srt/!d;s/  .*$//g;s/^ \+//g')
             unrar -x ${file} "${sub}" &> /dev/null && rm -rf ${file}
             mv -fu "${sub}" $(echo ${file} | sed 's/.pack$//').srt &>/dev/null
+	    rm -rf ${file}
         else
             # pega soh a legenda, exclui o resto e renomeia
             sub=$(unzip -l ${file} |  sed '/.srt$/!d;s/^.*  //;s/^ \+//g')
             unzip -o ${file} "${sub}" &> /dev/null && rm -rf ${file}
             mv -fu "${sub}" $(echo ${file} | sed 's/.pack$//').srt &> /dev/null
+	    rm -rf ${file}
         fi
     done
 }
