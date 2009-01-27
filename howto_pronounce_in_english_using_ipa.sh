@@ -1,5 +1,8 @@
 #!/bin/bash
-# otorhinolaryngologist
+# copyright caio begotti <caio1982@gmail.com>
+# give it a try by using 'otorhinolaryngologist'
+# or get my words file transcribed to IPA chars at
+# http://caio.ueberalles.net/linux.words.phonetics
 
 file=$(mktemp)
 raw=$(lynx -source --nolist http://dictionary.reference.com/browse/${1} > ${file})
