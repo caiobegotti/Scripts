@@ -1,4 +1,7 @@
 #!/bin/bash
+# it's used to convert an CSV file (from my home banking site
+# to aurelio.net's moneylog simple format... have fun with it
+# copyright caio begotti <caio1982@gmail.com>
 
 temp=$(mktemp)
 sed 's/"/|/g;s/|,|/|/g' ${*} > ${temp}

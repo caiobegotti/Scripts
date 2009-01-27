@@ -3,8 +3,7 @@
 # checks every package to be upgraded to find out
 # whether they have any local customization or not.
 #
-# Wed, 15 Aug 2007 06:17:51 -0700
-# caio1982 <caio@ueberalles.net>
+# copyright caio begotti <caio1982@gmail.com> on Wed, 15 Aug 2007 06:17:51 -0700
 #
 # RPM's checking output:
 #

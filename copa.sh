@@ -5,7 +5,7 @@
 #
 # todos eles estao na melhor resolucao disponivel de graca
 #
-# caio1982 <caio@ueberalles.net> <http://caio.ueberalles.net>
+# caio1982 <caio1982@gmail.com> <http://caio.ueberalles.net>
 # copyright (c) 2006 caio begotti on Sun, 18 Jun 2006 02:31:48 -0300
 
 dcop=$(which dcop)           || echo 'DCOP não encontrado, instale o pacote "kdelibs-bin"!'

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # Tue, 29 Aug 2006 20:16:44 -0300
-# caio begotti (caio1982) <caio@ueberalles.net>
+# copyright caio begotti <caio1982@gmail.com>
 #
 # esse script bem porco serviu pra gerar um PDF das tirinhas dos malvados
 # usando somente os comandos lynx + wget + imagemagick + pdftk

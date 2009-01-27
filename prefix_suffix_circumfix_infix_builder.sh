@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # build every word possible in LaTeX/IPA using a bunch of morphemes
-# Thu Aug 16 22:31:53 BRT 2007 caio1982 <caio@ueberalles.net>
+# copyright caio begotti <caio1982@gmail.com> on Thu Aug 16 22:31:53 BRT 2007
 # sed 's/../&x/'
 
 echo -e "\nWrite down a few word bases separated by space (e.g. 'kiRa lOmE'):" && read base

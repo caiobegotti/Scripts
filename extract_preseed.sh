@@ -1,7 +1,7 @@
 #!/bin/bash -e
 #
 # script to extract supposed debian-installer's preseed entries
-# caio begotti <caio@ueberalles.net> on Wed,  4 Oct 2006 17:06:29 -0300
+# copyright caio begotti <caio1982@gmail.com> on Wed,  4 Oct 2006 17:06:29 -0300
 
 didir=/root/d-i/packages/
 output=/root/preseed.txt

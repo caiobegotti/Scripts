@@ -2,7 +2,7 @@
 #
 # script que baixa todas as capas do jornal folha de sao paulo
 # (fac similes publicos) desde 01 de janeiro de 2000 ate o dia atual
-# caio begotti <caio@ueberalles.net> on Mon,  9 Oct 2006 23:39:29 -0300
+# copyright caio begotti <caio1982@gmail.com> on Mon,  9 Oct 2006 23:39:29 -0300
 #
 # TODO: eh capa pra caralho, seria bom fazer uma galeria decente com o llgal
 

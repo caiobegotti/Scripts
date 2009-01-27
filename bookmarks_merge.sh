@@ -1,6 +1,6 @@
 #!/bin/bash -e
 # a tiny script that merges tons of bookmarks.html from mozilla in a single one
-# caio begotti <caio@ueberalles.net> on Mon, 19 Mar 2007 11:26:59 -0300
+# copyright caio begotti <caio1982@gmail.com> on Mon, 19 Mar 2007 11:26:59 -0300
 
 input_file="$*"
 

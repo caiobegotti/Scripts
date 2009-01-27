@@ -2,7 +2,7 @@
 #
 # this should be a script that makes some analysis on
 # svn blame outputs and rank developers by line written
-# caio begotti <caio@ueberalles>
+# copyright caio begotti <caio1982@gmail.com>
 
 # cat ASTERISK_HALL_OF_FAME.txt | awk '{ print $2}' | sort -u | while read i; do grep $i ASTERISK_HALL_OF_FAME.txt | wc -l && echo $i; done | sed 'N;s/\n/ /'
 
