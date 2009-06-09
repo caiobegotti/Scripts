@@ -1,7 +1,7 @@
 #!/bin/bash
 
-user=your_twitter_username
-pages=99
+user=${1}
+pages=${2}
 
 for number in $(seq 1 ${pages}); do
 	sleep 3
