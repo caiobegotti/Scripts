@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 
 user=${1}
 pages=${2}
@@ -12,7 +12,7 @@ for number in $(seq 1 ${pages}); do
 	    -e 's/ \+<ol class=.*"timeline">//g'                                        \
 	    -e 's/<li /\n\n<li /g'                                                      \
 	    -e 's/<\/li>/\n<\/li>/g'                                                  | \
-	sed -e '/<span/s/^/\t/g'
+	sed -e '/<span/s/^/\t/g;/^$/d'
 done
 
 exit 0
