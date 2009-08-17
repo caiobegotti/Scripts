@@ -26,6 +26,7 @@ function get_pages_from_issue() {
 			wget http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg -O ${issue}/page_${page}.jpg
 		done
 
+		find ${issue} -size 0 -exec rm -rf {} \;
 		echo "LOG: issue ${issue} fully fetched with $(find ${issue} -type f -iname "*_print.jpg" | wc -l) pages"
 	done
 }
