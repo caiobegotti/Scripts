@@ -19,7 +19,7 @@ cookies=$(mktemp)
 
 function do_login()
 {
-    wget -q --keep-session-cookies --save-cookies ${cookies} --post-data="login.secure?publicationid=1012&issueid=28196&user=${login_name}&password=${login_pass}&rnd=0.360567018171574" http://archives.newyorker.com -O /dev/null
+    wget -q --save-cookies ${cookies} --post-data="login.secure?publicationid=1012&issueid=28196&user=${login_name}&password=${login_pass}&rnd=0.360567018171574" http://archives.newyorker.com -O /dev/null
 }
 
 function get_issues_by_year() {
@@ -33,7 +33,7 @@ function get_pages_from_issue() {
 	for issue in $(get_issues_by_year); do
 		test -d ${issue} || mkdir -p ${issue}
 		for page in $(seq -w 001 300); do
-			wget --user-agent 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_7; en-us) AppleWebKit/530.19.2 (KHTML, like Gecko) Version/4.0.2 Safari/530.19' http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg -O ${issue}/page_${page}.jpg
+			wget --load-cookies ${cookies} --user-agent 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_7; en-us) AppleWebKit/530.19.2 (KHTML, like Gecko) Version/4.0.2 Safari/530.19' http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg -O ${issue}/page_${page}.jpg
 		done
 
 		find ${issue} -size 0 -exec rm -rf {} \;
