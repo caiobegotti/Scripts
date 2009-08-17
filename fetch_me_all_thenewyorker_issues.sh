@@ -13,7 +13,7 @@
 # http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/2009_08_24/webimages/page0000001_print.jpg
 
 function get_issues_by_year() {
-	for year in $(seq 1925 $(date +%Y)); do
+	for year in $(seq 2009 $(date +%Y)); do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
 		lynx -useragent 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_7; en-us) AppleWebKit/530.19.2 (KHTML, like Gecko) Version/4.0.2 Safari/530.19' -dump --nolist ${url} | cut -d: -f3 | sed '/_/!d;s/"//g;s/,.*$//'
 	done | sort -u
