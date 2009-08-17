@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 #
 # caio begotti <caio1982@gmail.com> on Mon Aug 17 11:46:50 BRT 2009
 #
