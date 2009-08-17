@@ -18,9 +18,24 @@ function get_issues_by_year() {
 	for year in $(seq 1925 $(date +%Y)); do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
 		lynx -dump --nolist ${url} | cut -d: -f3 | sed '/_/!d;s/"//g;s/,.*$//'
+	done | sort -u
+}
+
+function get_pages_from_issue() {
+	for issue in get_issues_by_year; do
+		mkdir -p ${issue}
+		for page in $(seq -w 0000001 0000300); do
+			wget -q http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page${page}_print.jpg
+		done
+
+		echo "LOG: issue ${issue} fully fetched with $(find ${issue} -type f -iname "*_print.jpg" | wc -l) pages"
 	done
 }
 
-get_issues_by_year
+function main() {
+	get_pages_from_issue
+}
 
+
+main
 exit 0
