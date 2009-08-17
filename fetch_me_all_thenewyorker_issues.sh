@@ -12,8 +12,6 @@
 # get a specific page, ready for printing
 # http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/2009_08_24/webimages/page0000001_print.jpg
 
-. /Users/caio1982/.bashrc
-
 function get_issues_by_year() {
 	for year in $(seq 1925 $(date +%Y)); do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
@@ -25,7 +23,7 @@ function get_pages_from_issue() {
 	for issue in $(get_issues_by_year); do
 		mkdir -p ${issue}
 		for page in $(seq -w 001 300); do
-			wget -q http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg
+			wget http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg -O ${issue}/page_${page}.jpg
 		done
 
 		echo "LOG: issue ${issue} fully fetched with $(find ${issue} -type f -iname "*_print.jpg" | wc -l) pages"
