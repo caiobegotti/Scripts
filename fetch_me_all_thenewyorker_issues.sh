@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xv
 #
 # caio begotti <caio1982@gmail.com> on Mon Aug 17 11:46:50 BRT 2009
 #
@@ -11,6 +11,16 @@
 
 # get a specific page, ready for printing
 # http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/2009_08_24/webimages/page0000001_print.jpg
+
+login_name="${1}"
+login_pass="${2}"
+
+cookies=$(mktemp)
+
+function do_login()
+{
+    wget -q --keep-session-cookies --save-cookies ${cookies} --post-data="login.secure?publicationid=1012&issueid=28196&user=${login_name}&password=${login_pass}&rnd=0.360567018171574" http://archives.newyorker.com -O /dev/null
+}
 
 function get_issues_by_year() {
 	for year in $(seq 2009 $(date +%Y)); do
@@ -32,9 +42,8 @@ function get_pages_from_issue() {
 }
 
 function main() {
-	get_pages_from_issue
+	do_login && get_pages_from_issue
 }
-
 
 main
 exit 0
