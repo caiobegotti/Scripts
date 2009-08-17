@@ -22,7 +22,7 @@ function get_issues_by_year() {
 }
 
 function get_pages_from_issue() {
-	for issue in get_issues_by_year; do
+	for issue in $(get_issues_by_year); do
 		mkdir -p ${issue}
 		for page in $(seq -w 0000001 0000300); do
 			wget -q http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page${page}_print.jpg
