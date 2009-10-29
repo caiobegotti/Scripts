@@ -17,23 +17,25 @@ login_pass="${2}"
 
 cookies=$(mktemp)
 
-function do_login()
-{
-    wget -q --save-cookies ${cookies} --post-data="login.secure?publicationid=1012&issueid=28196&user=${login_name}&password=${login_pass}&rnd=0.360567018171574" http://archives.newyorker.com -O /dev/null
-}
-
 function get_issues_by_year() {
 	for year in $(seq 2009 $(date +%Y)); do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
 		lynx -dump --nolist ${url} | cut -d: -f3 | sed '/_/!d;s/"//g;s/,.*$//'
-	done | sort -u
+	done | sort -u | grep 2009_10_05
 }
 
 function get_pages_from_issue() {
 	for issue in $(get_issues_by_year); do
 		test -d ${issue} || mkdir -p ${issue}
-		for page in $(seq -w 001 300); do
-			wget --load-cookies ${cookies} "http://archives.newyorker.com/djvu/Conde Nast/New Yorker/${issue}/webimages/page0000${page}_print.jpg" -O ${issue}/page_${page}.jpg
+		rm -rf urls
+
+		for page in $(seq -w 001 100); do
+			echo "http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg" >> urls
+		done
+
+		for file in $(cat urls | uniq); do
+			output=${issue}/$(echo ${file} | sed 's/^.*\///')
+			wget --load-cookies ./cookies.txt "${file}" -O ${output} || rm -rf ${output}
 		done
 
 		find ${issue} -size 0 -exec rm -rf {} \;
@@ -42,7 +44,7 @@ function get_pages_from_issue() {
 }
 
 function main() {
-	do_login && get_pages_from_issue
+	get_pages_from_issue
 }
 
 main
