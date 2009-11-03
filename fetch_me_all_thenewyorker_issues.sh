@@ -1,4 +1,4 @@
-#!/bin/bash -xv
+#!/bin/bash
 #
 # caio begotti <caio1982@gmail.com> on Mon Aug 17 11:46:50 BRT 2009
 #
@@ -12,16 +12,11 @@
 # get a specific page, ready for printing
 # http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/2009_08_24/webimages/page0000001_print.jpg
 
-login_name="${1}"
-login_pass="${2}"
-
-cookies=$(mktemp)
-
 function get_issues_by_year() {
-	for year in $(seq 2009 $(date +%Y)); do
+	for year in ${1}; do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
 		lynx -dump --nolist ${url} | cut -d: -f3 | sed '/_/!d;s/"//g;s/,.*$//'
-	done | sort -u | grep 2009_10_05
+	done | sort -u
 }
 
 function get_pages_from_issue() {
@@ -29,13 +24,13 @@ function get_pages_from_issue() {
 		test -d ${issue} || mkdir -p ${issue}
 		rm -rf urls
 
-		for page in $(seq -w 001 100); do
+		for page in $(seq -w 001 175); do
 			echo "http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/${issue}/webimages/page0000${page}_print.jpg" >> urls
 		done
 
 		for file in $(cat urls | uniq); do
 			output=${issue}/$(echo ${file} | sed 's/^.*\///')
-			wget --load-cookies ./cookies.txt "${file}" -O ${output} || rm -rf ${output}
+			test -e ${output} || wget --load-cookies ./cookies.txt "${file}" -O ${output} || rm -rf ${output}
 		done
 
 		find ${issue} -size 0 -exec rm -rf {} \;
