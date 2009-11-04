@@ -12,8 +12,10 @@
 # get a specific page, ready for printing
 # http://archives.newyorker.com/djvu/Conde%20Nast/New%20Yorker/2009_08_24/webimages/page0000001_print.jpg
 
+year=${1}
+
 function get_issues_by_year() {
-	for year in ${1}; do
+	for year in ${year}; do
 		url=http://archives.newyorker.com/global/content/GetArchive.aspx\?pid=1012\&type=IssuesForYear\&Year=${year}
 		lynx -dump --nolist ${url} | cut -d: -f3 | sed '/_/!d;s/"//g;s/,.*$//'
 	done | sort -u
