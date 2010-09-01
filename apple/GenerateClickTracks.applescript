@@ -1,6 +1,10 @@
 (*
 	This is Caio Begotti's GenerateClickTracks AppleScript. Public Domain FWIW.
-	Original from <http://caio.ueberalles.net/svn/scripts/apple/>	
+	
+	Use this to generate click tracks (like a metronome would do) using
+	Audacity's plug-ins/clicktrack.ny. It's hackish, but it works.
+	
+	Get the original from <http://caio.ueberalles.net/svn/scripts/apple/>	
 	
 	USAGE: osascript ./GenerateClickTracks.applescript <int>
 *)
@@ -31,6 +35,9 @@ on run argv
 											keystroke return
 										end repeat
 										delay 5
+										tell application "Finder"
+											activate
+										end tell
 									end tell
 								end tell
 							end tell
