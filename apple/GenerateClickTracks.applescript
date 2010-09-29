@@ -20,6 +20,11 @@ on run argv
 	# esse Ž o tamanho do seu passo duplo
 	set bpm to meter * 1.4
 	
+	tell application "Finder" to get folder of (path to me) as Unicode text
+	set appdir to POSIX path of result
+	set resdir to appdir & "/resources/"
+	set outdir to appdir & "/output/"
+	
 	tell application "Finder"
 		if bpm is not "" then
 			tell application "System Events"
@@ -35,21 +40,22 @@ on run argv
 										click menu 1 of menu bar item "Audacity" of menu bar 1
 										keystroke tab
 										keystroke "a" using command down
-										keystroke bpm
+										keystroke (bpm as integer)
 										click button "OK" of window "Click Track..."
 										delay 5
 										keystroke "i" using {command down, shift down}
-										keystroke "/tmp/" & checkpoint & ".wav"
+										keystroke resdir & checkpoint & ".wav"
 										repeat 2 times
 											keystroke return
 										end repeat
-										delay 500
 										click menu item "Export..." of menu 1 of menu bar item "File" of menu bar 1
-										keystroke "/tmp/" & "click" & checkpoint & "-" & bpm & ".wav"
+										keystroke outdir & "click" & "-" & checkpoint & "-" & bpm & ".wav"
 										repeat 3 times
 											keystroke return
 										end repeat
 										delay 5
+										keystroke "a" using command down
+										click menu item "Remove Tracks" of menu 1 of menu bar item "Tracks" of menu bar 1
 										tell application "Finder"
 											activate
 										end tell
