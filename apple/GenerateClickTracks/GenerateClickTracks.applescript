@@ -18,7 +18,7 @@ on run argv
 	set meter to item 2 of argv
 	
 	# esse Ž o tamanho do seu passo duplo
-	set bpm to (meter * 1.4 as integer)
+	set bpm to ((meter / 1.4) * 2 as integer)
 	
 	tell application "Finder" to get folder of (path to me) as Unicode text
 	set appdir to POSIX path of result
