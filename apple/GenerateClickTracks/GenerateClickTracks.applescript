@@ -42,11 +42,13 @@ on run argv
 										keystroke "a" using command down
 										keystroke "" & bpm
 										click button "OK" of window "Click Track..."
+										delay 5
 										keystroke "i" using {command down, shift down}
 										keystroke resdir & checkpoint & ".wav"
 										repeat 2 times
 											keystroke return
 										end repeat
+										delay 5
 										click menu item "Export..." of menu 1 of menu bar item "File" of menu bar 1
 										keystroke outdir & "t-" & checkpoint & "-p-" & bpm & ".wav"
 										repeat 3 times
