@@ -15,10 +15,7 @@ on run argv
 	set checkpoint to item 1 of argv
 	
 	# costuma variar entre 40 e 65
-	set meter to item 2 of argv
-	
-	# esse Ž o tamanho do seu passo duplo
-	set bpm to ((meter / 1.4) * 2 as integer)
+	set bpm to (item 2 of argv as integer)
 	
 	tell application "Finder" to get folder of (path to me) as Unicode text
 	set appdir to POSIX path of result
