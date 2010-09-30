@@ -18,7 +18,7 @@ on run argv
 	set meter to item 2 of argv
 	
 	# esse Ž o tamanho do seu passo duplo
-	set bpm to meter * 1.4
+	set bpm to (meter * 1.4 as integer)
 	
 	tell application "Finder" to get folder of (path to me) as Unicode text
 	set appdir to POSIX path of result
@@ -40,16 +40,15 @@ on run argv
 										click menu 1 of menu bar item "Audacity" of menu bar 1
 										keystroke tab
 										keystroke "a" using command down
-										keystroke (bpm as integer)
+										keystroke "" & bpm
 										click button "OK" of window "Click Track..."
-										delay 5
 										keystroke "i" using {command down, shift down}
 										keystroke resdir & checkpoint & ".wav"
 										repeat 2 times
 											keystroke return
 										end repeat
 										click menu item "Export..." of menu 1 of menu bar item "File" of menu bar 1
-										keystroke outdir & "click" & "-" & checkpoint & "-" & bpm & ".wav"
+										keystroke outdir & "t-" & checkpoint & "-p-" & bpm & ".wav"
 										repeat 3 times
 											keystroke return
 										end repeat
