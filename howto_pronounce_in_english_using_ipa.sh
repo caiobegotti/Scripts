@@ -4,11 +4,7 @@
 # or get my words file transcribed to IPA chars at
 # http://caio.ueberalles.net/linux.words.phonetics
 
-file=$(mktemp)
-raw=$(lynx -source --nolist http://dictionary.reference.com/browse/${1} > ${file})
-grep '<span class="prondelim">' ${file} | tidy -wrap 9999 -i -c -q -utf8 -b 2> /dev/null > ${file}
-matches=$(cat ${file} | sed '/noscript/!d;s/<[^>]*>//g;s/\ //g' | sed 's/AudioHelp//g;s/PronunciationKey//g;s/ShowSpelledPronunciation//g;s/ShowIPAPronunciation//g' | cut -d/ -f2 | head -1)
-
-echo ${matches}
+input=${1}
+lynx -source --nolist http://dictionary.reference.com/browse/${input:=default} | grep '<span class="prondelim">' | tidy -wrap 9999 -i -c -q -utf8 -b 2> /dev/null | sed '/noscript/!d;s/<[^>]*>//g;s/\ //g' | sed 's/AudioHelp//g;s/PronunciationKey//g;s/ShowSpelledPronunciation//g;s/ShowIPAPronunciation//g' | cut -d/ -f2 | grep -i '[[:alnum:]]' | head -1
 
 exit 0
