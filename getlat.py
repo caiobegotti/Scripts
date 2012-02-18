@@ -24,4 +24,4 @@ except:
     
 for div in elements:
     res = tostring(div, encoding='utf-8', method='text', pretty_print=True)
-    print res
+    print res.replace('[edit] ','').replace('\n\n','\n')
