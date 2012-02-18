@@ -11,8 +11,8 @@ from lxml import etree
 parser = etree.HTMLParser()
 tree = etree.parse("http://en.wiktionary.org/wiki/gratias_ago", parser)
 
-elements = tree.xpath("/html/body/div[3]")
+elements = tree.xpath("/html/body/div[3]/div[3]/div[4]")
 
 for div in elements:
-    res = tostring(div, encoding='utf-8', method='html', pretty_print=True)
-    print clean_html(res)
+    res = clean_html(tostring(div, encoding='utf-8', method='html', pretty_print=True))
+    print res
