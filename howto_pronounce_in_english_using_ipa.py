@@ -20,7 +20,7 @@ try:
     tree = etree.parse('http://phonodict.net/' + term, parser)
     elements = tree.xpath('/html/body/nav/div/span[@id="ipa"]')
 except:
-    exit('Term not found or wiktionary unavailable now')
+    exit('Term not found or Phonodict is unavailable now')
 
 for div in elements:
     res = tostring(div, encoding='utf-8', method='text', pretty_print=True)
