@@ -13,7 +13,7 @@ from lxml import etree
 if not len(argv) == 2:
     exit('Usage: ' + argv[0] + " 'your term'")
 
-term = argv[1].replace(' ','_').lower()
+term = argv[1].lower()
 parser = etree.HTMLParser()
 
 try:
