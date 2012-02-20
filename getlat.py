@@ -12,6 +12,7 @@ from lxml import etree
 
 from os import popen
 import tempfile
+import re
 
 if not len(argv) == 2:
     exit('Usage: ' + argv[0] + " 'your term'")
@@ -31,14 +32,24 @@ try:
         # i could also have manually handled this, but if they won't keep indentation and
         # white spaces i guess there's no point in doing it myself
 
+        f = tempfile.NamedTemporaryFile()
+        f.write(html)
+        f.seek(0)
+        
+        regex = re.compile('id="Latin">')
+        parsed = regex.split(f.read())[1]
+        regex = re.compile('<hr>')
+        cleaned = regex.split(parsed)[0]
+       
         file = tempfile.NamedTemporaryFile()
-        filename = file.name
-        file.write(html)
+        filename = file.name 
+        file.write(cleaned)
         file.seek(0)
+        
         of = popen('cat %s | lynx -assume-charset=UTF-8 -dump -nolist -width=200 -stdin' % filename)
-        buffer = of.read().replace('[edit] ','')
+        buffer = of.read().replace(' ">edit] ','').replace('[edit] ','')
         of.close()
-        file.flush()
+        
         print buffer
     except:
         exit('Could not render the page from wiktionary')
