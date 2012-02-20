@@ -36,7 +36,7 @@ try:
         f.write(html)
         f.seek(0)
         
-        regex = re.compile('id="Latin">')
+        regex = re.compile('id="Latin">Latin')
         parsed = regex.split(f.read())[1]
         regex = re.compile('<hr>')
         cleaned = regex.split(parsed)[0]
