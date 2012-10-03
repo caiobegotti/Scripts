@@ -3,6 +3,7 @@
 #
 # this file is under public domain <caio1982@gmail.com>
 
+import json
 import re
 
 # should match all distances in kilometers
@@ -19,17 +20,9 @@ url = 'http://www.trainerassessoria.com.br/calendario-de-eventos/%s/%s' % (stamp
 
 tree = etree.parse(url, parser)
 
-races = []
-for r in tree.xpath('//dd[@class="linha_calend"]/a/strong//text()'):
-    races.append(r)
-
-dates = []
-for d in tree.xpath('//dt//text()'):
-    dates.append(d)
-
-dists = []
-for r in races:
-    dists.append(regex.findall(r))
+races = list(tree.xpath('//dd[@class="linha_calend"]/a/strong//text()'))
+dates = list(tree.xpath('//dt//text()'))
+dists = [regex.findall(r) for r in races]
 
 cal = zip(races, dates, dists)
 
