@@ -32,8 +32,8 @@ def calendar():
         values = tree.xpath('//dd//text()')
         data = zip(keys, values)
         info = {}
-        for d in data:
-            info[d[0]] = d[1]
+        for key, value in data:
+            info[key] = value
         calendar[v] = info
     return calendar
 
