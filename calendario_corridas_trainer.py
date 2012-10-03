@@ -3,6 +3,7 @@
 #
 # this file is under public domain <caio1982@gmail.com>
 
+import web
 import json
 import re
 
@@ -15,16 +16,41 @@ from datetime import date
 parser = etree.HTMLParser()
 stamp = date.today()
 
-# it might get changed over time, have to keep it up with it somehow
-url = 'http://www.trainerassessoria.com.br/calendario-de-eventos/%s/%s' % (stamp.year, stamp.month)
+def venues():
+    # first we need to get all venues in the current year/month
+    domain = 'http://www.trainerassessoria.com.br/'
+    url = '%s/calendario-de-eventos/%s/%s' % (domain, stamp.year, stamp.month)
+    tree = etree.parse(url, parser)
+    venues = [domain + i for i in tree.xpath('//dd[@class="linha_calend"]/a//@href')]
+    return venues
 
-tree = etree.parse(url, parser)
+def calendar():
+    calendar = {}
+    for v in venues():
+        tree = etree.parse(v, parser)
+        keys = tree.xpath('//dt//text()')
+        values = tree.xpath('//dd//text()')
+        data = zip(keys, values)
+        info = {}
+        for d in data:
+            info[d[0]] = d[1]
+        calendar[v] = info
+    return calendar
 
-races = list(tree.xpath('//dd[@class="linha_calend"]/a/strong//text()'))
-dates = list(tree.xpath('//dt//text()'))
-dists = [regex.findall(r) for r in races]
+urls = (
+    '/', 'index'
+)
 
-cal = zip(races, dates, dists)
+app = web.application(urls, globals(), True)
 
-for c in cal:
-   print c
+class index():
+    def GET(self):
+        data = calendar()
+        web.header('content-type', 'application/json')
+        return json.dumps(data)
+
+#web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
+
+if __name__ == "__main__":
+    #web.runwsgi = web.runfcgi
+    app.run()
