@@ -6,7 +6,7 @@
 import re
 
 # should match all distances in kilometers
-regex = re.compile("[0-9]+[,.]?[0-9]+?[ ]+?km", re.IGNORECASE)
+regex = re.compile("\d+[,.]?\d?[ ]?km", re.IGNORECASE)
 
 from lxml import etree
 from datetime import date
