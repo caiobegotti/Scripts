@@ -9,10 +9,15 @@ import re
 regex = re.compile("[0-9]+[,.]?[0-9]+?[ ]+?km", re.IGNORECASE)
 
 from lxml import etree
+from datetime import date
 
 parser = etree.HTMLParser()
+stamp = date.today()
 
-tree = etree.parse('http://www.trainerassessoria.com.br/calendario-de-eventos/2012/11', parser)
+# it might get changed over time, have to keep it up with it somehow
+url = 'http://www.trainerassessoria.com.br/calendario-de-eventos/%s/%s' % (stamp.year, stamp.month)
+
+tree = etree.parse(url, parser)
 
 races = []
 for r in tree.xpath('//dd[@class="linha_calend"]/a/strong//text()'):
