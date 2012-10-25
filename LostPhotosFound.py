@@ -67,6 +67,24 @@ def get_messages(server):
 
     return messages
 
+def save_part(part):
+    if not hasattr(save_part, "seq"):
+        save_part.seq = 0;
+
+    filename = part.get_filename()
+    if not filename:
+        filename = 'attachment-%06d.bin' % (save_part.seq)
+	save_part.seq += 1
+
+    if not os.path.isdir(USERNAME):
+        os.mkdir(USERNAME)
+
+    saved = os.path.join(USERNAME, filename)
+    if not os.path.isfile(saved):
+        f = open(saved, 'wb')
+        f.write(part.get_payload(decode=True))
+        f.close()
+
 def filter_content(messages):
     for m in messages:
         data = server.fetch([m], ['RFC822'])
@@ -103,18 +121,8 @@ def filter_content(messages):
                         continue
                     if part.get('Content-Disposition') is None:
                         continue
-                    filename = part.get_filename()
-                    seq = 1
-                    if not filename:
-                        filename = 'attachment-%03d%s' % (seq, 'bin')
-                        seq += 1
-                    if not os.path.isdir(USERNAME):
-                        os.mkdir(USERNAME)
-                    saved = os.path.join(USERNAME, filename)
-                    if not os.path.isfile(saved):
-                        f = open(saved, 'wb')
-                        f.write(part.get_payload(decode=True))
-                        f.close()
+
+                    save_part(part)
         
 
 server = get_server(HOST, USERNAME, PASSWORD)
