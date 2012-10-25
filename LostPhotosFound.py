@@ -13,6 +13,7 @@
 #	- CLI options for host, username, password, folder, criteria and attachment size
 #	- is_multipart() seems better if attachment is too big/inline (it crashes)
 #	- better (real) debug logging :-)
+#	- allow saving files with duplicate names (adding a counter suffix maybe)
 
 # to save the images
 import os
