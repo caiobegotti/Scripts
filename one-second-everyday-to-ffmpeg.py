@@ -21,3 +21,30 @@
 #	sed '/<string>file:\/\/localhost/!d;s/^.*Documents\///g;s/<\/string>//g' ${indexlist}.txt > ${pathslist}
 #	paste -d: ${dateslist} ${pathslist} | sort
 # }
+
+import re
+import biplist
+
+date_regex = re.compile('^(20[0-9]{2}-[0-9]{2}-[0-9]{2})')
+path_regex = re.compile('file://localhost.*(snippet_.*mov)')
+
+try:
+    plist = biplist.readPlist("test.plist")
+except (InvalidPlistException, NotBinaryPlistException), error:
+    print "Not a valid property list file: ", error
+
+dates = []
+paths = []
+
+for item in plist['$objects']:
+    if isinstance(item, str) and '$null' not in item:
+        for match in date_regex.findall(item):
+            if match:
+                dates.append(match)
+        for match in path_regex.findall(item):
+            if match:
+                paths.append(match)
+
+mapping = sorted(zip(dates, paths), key=lambda x: x[0])
+
+print mapping
