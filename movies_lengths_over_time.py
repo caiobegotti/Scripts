@@ -44,7 +44,6 @@ for file in files:
 
 with open('imdb.txt', 'a', 'utf8') as f:
     f.seek(0)
-    f.write('Title\tYear\tRuntime\tLink\n')
     year_regex = re.compile('.([12][0-9]{3}).')
     for entry in data:
         title = entry[0]
