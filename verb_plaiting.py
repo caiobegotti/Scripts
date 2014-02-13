@@ -105,5 +105,4 @@ def parse_verbs():
 
 # fetch_all_pages()
 # save_verbs()
-for verb in parse_verbs():
-    print 'to', verb
+# parse_verbs()
