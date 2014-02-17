@@ -28,13 +28,13 @@ _loop() {
 	done
 }
 
-mywget='wget -t 5 -T 30 -x --load-cookies cookies.txt'
+mywget='wget --random-wait -t 5 -T 30 -x --load-cookies cookies.txt'
 
 imdb=http://www.imdb.com
 startpage=99851
 limitpage=285000
 
-search="/search/title?at=0&count=100&sort=moviemeter,asc&start=${startpage}&title_type=feature&tok=17bd&year=1900,2015"
+search="/search/title?at=0&count=100&sort=boxoffice_gross_us,asc&start=${startpage}&title_type=feature&tok=17bd&year=1900,2015"
 fullsearch="${imdb}${search}"
 ${mywget} ${fullsearch} -O imdb.search
 
