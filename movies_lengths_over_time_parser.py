@@ -4,52 +4,79 @@
 # this file is under public domain
 # caio begotti <caio1982@gmail.com>
 #
-# total: 285334
-# no movies this year: //div[@class='content_none']//text()
-# listing: http://www.imdb.com/search/title?at=0&sort=moviemeter,asc&start=1&title_type=feature&year=1900,2015
-# pagination: //span[@class="pagination"]/a/@href (51, 101, 151...)
-# runtime: //span[@class='runtime']//text()
-# year: //span[@class="year_type"]/text()
-# title: //td[@class="title"]/a/text()
-# link: //td[@class="title"]/a/@href
-# rating: 
 # director: 
 # cast: 
-# categories: 
-# stars: 
 # votes: 
 # boxoffice: 
 
-import re
+from bs4 import BeautifulSoup as bs
 
 from codecs import open
-from lxml import etree
-from lxml import html
 from glob import glob
 
 files = glob('*.html')
-
-data = []
+moviedict = {}
 for file in files:
     with open(file, 'r') as f:
-        parser = etree.HTMLParser()
-        tree = html.fromstring(f.read())
-        titles = tree.xpath('//td[@class="title"]/a/text()')
-        years = tree.xpath('//span[@class="year_type"]/text()')
-        runtimes = tree.xpath('//span[@class="runtime"]//text()')
-        hrefs = tree.xpath('//td[@class="title"]/a/@href')
-        row = zip(titles, years, runtimes, hrefs)
-        data.extend(row)
+        soup = bs(f.read())
+        entries = soup('td', class_='title')
+        for entry in entries:
+            movie = entry('a', href=True)[0]
+            rowdict = moviedict[movie.text] = {}
+
+            # for more information
+            rowdict['link'] = 'http://www.imdb.com' + movie['href']
+
+            # so we can get poster images
+            parent = entry.parent
+            for par in parent('td', class_='image'):
+                rowdict['thumbnail'] = par.a.img['src']
+
+            # running time, in minutes
+            runtime = entry('span', class_='runtime')
+            if len(runtime) == 0:
+                rowdict['runtime'] = 'N/A'
+            else:
+                rowdict['runtime'] = runtime[0].text.replace(' mins.', '')
+
+            # year date
+            release = entry('span', class_='year_type')
+            if len(release) == 0:
+                rowdict['release'] = 'N/A'
+            else:
+                ret = release[0].text.replace(')', '')
+                ret = ret.replace('(', '')
+                rowdict['release'] = ret
+
+            # main (first) genre only
+            genres = entry('span', class_='genre')
+            if len(genres) == 0:
+                rowdict['genre'] = 'N/A'
+            else:
+                for genre in genres:
+                    rowdict['genre'] = genre.a.text
+
+            # certificate
+            certs = entry('span', class_='certificate')
+            for cert in certs:
+                if cert.span:
+                    rowdict['certificate'] = cert.span['title']
+                else:
+                    rowdict['certificate'] = 'N/A'
+
+            # rating
+            rates = entry('span', class_='value')
+            for rate in rates:
+                if '-' in rate.text:
+                    rowdict['rating'] = 'N/A'
+                else:
+                    rowdict['rating'] = rate.text
+
+        # some debugging
+        print moviedict
     f.close()
 
-with open('imdb.txt', 'a', 'utf8') as f:
+with open('imdb.dict', 'a', 'utf8') as f:
     f.seek(0)
-    year_regex = re.compile('.([12][0-9]{3}).')
-    for entry in data:
-        title = entry[0]
-        year = ''.join(year_regex.findall(entry[1]))
-        runtime = entry[2].replace(' mins.', '')
-        href = 'http://www.imdb.com' + entry[3]
-        csvline = '%s\t%s\t%s\t%s\n' % (title, year, runtime, href)
-        f.write(csvline)
+    f.write(str(moviedict))
     f.close()
