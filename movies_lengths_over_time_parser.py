@@ -3,13 +3,10 @@
 #
 # this file is under public domain
 # caio begotti <caio1982@gmail.com>
-#
-# director: 
-# cast: 
-# votes: 
-# boxoffice: 
 
 from bs4 import BeautifulSoup as bs
+
+import simplejson as json
 
 from codecs import open
 from glob import glob
@@ -27,10 +24,19 @@ for file in files:
             # for more information
             rowdict['link'] = 'http://www.imdb.com' + movie['href']
 
-            # so we can get poster images
+            # so we can get poster images, votes, cash flow
             parent = entry.parent
+
+            # movies posters
             for par in parent('td', class_='image'):
                 rowdict['thumbnail'] = par.a.img['src']
+
+            # users votes and box office numbers
+            for par in parent('td', class_='sort_col'):
+                if '$' in par.text:
+                    rowdict['boxoffice'] = par.text
+                else:
+                    rowdict['votes'] = par.text
 
             # running time, in minutes
             runtime = entry('span', class_='runtime')
@@ -76,7 +82,8 @@ for file in files:
         print moviedict
     f.close()
 
-with open('imdb.dict', 'a', 'utf8') as f:
+with open('imdb.json', 'a', 'utf8') as f:
     f.seek(0)
-    f.write(str(moviedict))
+    dump = json.dumps(moviedict, indent=4, sort_keys=True)
+    f.write(dump)
     f.close()
