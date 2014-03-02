@@ -19,11 +19,11 @@ for file in files:
         entries = soup('td', class_='title')
         for entry in entries:
             movie = entry('a', href=True)[0]
-            rowdict = moviedict[movie.text] = {}
+            rowdict = {}
 
-            # for more information
-            rowdict['link'] = 'http://www.imdb.com' + movie['href']
-
+            # to ease future updates of movie titles in english-only
+            rowdict['title'] = movie.text
+            
             # so we can get poster images, votes, cash flow
             parent = entry.parent
 
@@ -36,7 +36,25 @@ for file in files:
                 if '$' in par.text:
                     rowdict['boxoffice'] = par.text
                 else:
-                    rowdict['votes'] = par.text
+                    if '-' in par.text:
+                        rowdict['votes'] = 'N/A'
+                    else:
+                        rowdict['votes'] = par.text
+
+            # credits
+            credits = entry('span', class_='credit')
+            for credit in credits:
+                director = credit('a', href=True)[0]
+                rowdict['director'] = director.text
+
+                casts = credit('a', href=True)[1:]
+                cast = []
+                for c in casts:
+                    cast.append(c.text)
+                if len(cast) == 0:
+                    rowdict['cast'] = 'N/A'
+                else:
+                    rowdict['cast'] = ', '.join(cast)
 
             # running time, in minutes
             runtime = entry('span', class_='runtime')
@@ -77,12 +95,22 @@ for file in files:
                     rowdict['rating'] = 'N/A'
                 else:
                     rowdict['rating'] = rate.text
+            
+            # for more information, will also be the key
+            link = 'http://www.imdb.com' + movie['href']
+
+            # avoids duplicated, overwritten entries
+            if link in moviedict:
+                moviedict[link].update(rowdict)
+            else:
+                moviedict[link] = rowdict
 
         # some debugging
-        print moviedict
+        # print moviedict
+    print len(moviedict)
     f.close()
 
-with open('imdb.json', 'a', 'utf8') as f:
+with open('imdb.links.json', 'a', 'utf8') as f:
     f.seek(0)
     dump = json.dumps(moviedict, indent=4, sort_keys=True)
     f.write(dump)
