@@ -7,6 +7,7 @@
 from bs4 import BeautifulSoup as bs
 
 import simplejson as json
+import re
 
 from codecs import open
 from glob import glob
@@ -36,25 +37,26 @@ for file in files:
                 if '$' in par.text:
                     rowdict['boxoffice'] = par.text
                 else:
-                    if '-' in par.text:
-                        rowdict['votes'] = 'N/A'
-                    else:
+                    rowdict['boxoffice'] = 'N/A'
+                    if not '-' in par.text:
                         rowdict['votes'] = par.text
-
+                    else:
+                        rowdict['votes'] = 'N/A'
             # credits
+            diregex = re.compile("Dir: (.*)", re.IGNORECASE)
+            actegex = re.compile("With: (.*)", re.IGNORECASE)
             credits = entry('span', class_='credit')
             for credit in credits:
-                director = credit('a', href=True)[0]
-                rowdict['director'] = director.text
-
-                casts = credit('a', href=True)[1:]
-                cast = []
-                for c in casts:
-                    cast.append(c.text)
-                if len(cast) == 0:
-                    rowdict['cast'] = 'N/A'
+                director = diregex.findall(credit.text)
+                actors = actegex.findall(credit.text)
+                if director:
+                    rowdict['director'] = director[0]
                 else:
-                    rowdict['cast'] = ', '.join(cast)
+                    rowdict['director'] = 'N/A'
+                if actors:
+                    rowdict['cast'] = actors[0]
+                else:
+                    rowdict['cast'] = 'N/A'
 
             # running time, in minutes
             runtime = entry('span', class_='runtime')
@@ -110,7 +112,7 @@ for file in files:
     print len(moviedict)
     f.close()
 
-with open('imdb.links.json', 'a', 'utf8') as f:
+with open('imdb.json', 'a', 'utf8') as f:
     f.seek(0)
     dump = json.dumps(moviedict, indent=4, sort_keys=True)
     f.write(dump)
