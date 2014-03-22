@@ -12,6 +12,16 @@ import re
 from codecs import open
 from glob import glob
 
+RE_DIRECTOR = re.compile("Dir: (.*)", re.IGNORECASE)
+RE_CAST = re.compile("With: (.*)", re.IGNORECASE)
+RE_YEAR = re.compile("\b([0-9]{4})\b")
+#RE_BOXOFFICE = re.compile()
+#RE_RUNTIME = re.compile()
+
+# so we catch and filter parsing errors
+# later with a few regexes or otherwise manually
+DIRT = {}
+
 files = glob('*.html')
 moviedict = {}
 for file in files:
@@ -24,7 +34,7 @@ for file in files:
 
             # to ease future updates of movie titles in english-only
             rowdict['title'] = movie.text
-            
+
             # so we can get poster images, votes, cash flow
             parent = entry.parent
 
@@ -37,23 +47,25 @@ for file in files:
                 if '$' in par.text:
                     rowdict['boxoffice'] = par.text
                 else:
+                    DIRT['boxoffice'] = par.text
                     rowdict['boxoffice'] = 'N/A'
                     if not '-' in par.text:
                         rowdict['votes'] = par.text
                     else:
+                        DIRT['votex'] = par.text
                         rowdict['votes'] = 'N/A'
             # credits
-            diregex = re.compile("Dir: (.*)", re.IGNORECASE)
-            actegex = re.compile("With: (.*)", re.IGNORECASE)
             credits = entry('span', class_='credit')
             for credit in credits:
-                director = diregex.findall(credit.text)
-                actors = actegex.findall(credit.text)
+                director = RE_DIRECTOR.findall(credit.text)
+                actors = RE_CAST.findall(credit.text)
                 if director:
                     rowdict['director'] = director[0]
                 else:
+                    DIRT['director'] = director[]
                     rowdict['director'] = 'N/A'
                 if actors:
+                    DIRT['cast'] = actors
                     rowdict['cast'] = actors[0]
                 else:
                     rowdict['cast'] = 'N/A'
@@ -70,6 +82,7 @@ for file in files:
             if len(release) == 0:
                 rowdict['release'] = 'N/A'
             else:
+                print release.text
                 ret = release[0].text.replace(')', '')
                 ret = ret.replace('(', '')
                 rowdict['release'] = ret
@@ -88,6 +101,7 @@ for file in files:
                 if cert.span:
                     rowdict['certificate'] = cert.span['title']
                 else:
+                    DIRT['certificate'] = cert
                     rowdict['certificate'] = 'N/A'
 
             # rating
@@ -97,7 +111,7 @@ for file in files:
                     rowdict['rating'] = 'N/A'
                 else:
                     rowdict['rating'] = rate.text
-            
+
             # for more information, will also be the key
             link = 'http://www.imdb.com' + movie['href']
 
@@ -111,6 +125,8 @@ for file in files:
         # print moviedict
     print len(moviedict)
     f.close()
+
+print DIRT
 
 with open('imdb.json', 'a', 'utf8') as f:
     f.seek(0)
