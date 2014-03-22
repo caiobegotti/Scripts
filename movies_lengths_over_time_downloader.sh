@@ -1,4 +1,4 @@
-#!/bin/bash -xev
+#!/bin/bash -xv
 #
 # this file is under public domain
 # caio begotti <caio1982@gmail.com>
@@ -11,10 +11,6 @@ _url() {
 	echo $(sed '/Next/!d;s/^.*="//g;s/".*$//g' ${1} | head -1)
 }
 
-_cleanup() {
-	rm -vf .html *.html imdb.log imdb.search
-}
-
 _loop() {
 	while true; do
 		if [ ! -e "${count}.html" ]; then
@@ -22,19 +18,19 @@ _loop() {
 			${mywget} "${imdb}${url}" -O ${count}.html || (rm ${count}.html; ${mywget} "${imdb}${url}" -O ${count}.html)
 		fi
 		url=$(_url ${count}.html)
-	        if [ "${url}" == "" ]; then export url='/search/title?at=0&count=100&sort=moviemeter,asc&start=99851&title_type=feature&tok=17bd&year=1900,2015'; _cleanup; break; break; fi
+	        if [ "${url}" == "" ]; then exit 1; fi
 		count=$(_count ${url})
-	        if [ "${count}" == "" ]; then export count='99851'; _cleanup; break; break; fi
+	        if [ "${count}" == "" ]; then exit 1; fi
 	done
 }
 
 mywget='wget --random-wait -t 5 -T 30 -x --load-cookies cookies.txt'
 
 imdb=http://www.imdb.com
-startpage=99851
-limitpage=285000
+startpage=1
+limitpage=100000
 
-search="/search/title?at=0&count=100&sort=boxoffice_gross_us,asc&start=${startpage}&title_type=feature&tok=17bd&year=1900,2015"
+search="/search/title?t=0&count=100&sort=boxoffice_gross_us,asc&start=${startpage}&title_type=feature&tok=17bd&year=1900,2015"
 fullsearch="${imdb}${search}"
 ${mywget} ${fullsearch} -O imdb.search
 
