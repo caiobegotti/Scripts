@@ -32,7 +32,7 @@ RE_VOTES = re.compile("([\d,]{1,})", re.IGNORECASE)
 # to be used with {line,memory}_profiler
 # @profile
 def appfunc():
-    files = glob('temp/*.html')
+    files = glob('backup/*.html')
     moviedict = {}
     for file in files:
         with open(file, 'r') as f:
@@ -60,10 +60,12 @@ def appfunc():
                         votesre = RE_VOTES.findall(par.text)
                         if boxre:
                             rowdict['boxoffice'] = boxre[0]
-                        elif votesre:
-                            rowdict['votes'] = votesre[0]
                         else:
                             rowdict['boxoffice'] = 'N/A'
+
+                        if votesre:
+                            rowdict['votes'] = votesre[0]
+                        else:
                             rowdict['votes'] = 'N/A'
                 else:
                     rowdict['boxoffice'] = 'N/A'
