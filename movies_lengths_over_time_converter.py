@@ -16,7 +16,7 @@ with open('imdb.json', 'r', 'utf8') as f:
         row = '|'.join(x.values()) + '|' + entry
         rows.append(row)
 
-with open('csv.imdb', 'a', 'utf8') as csv:
+with open('imdb.csv', 'a', 'utf8') as csv:
     csv.seek(0)
     # u'rating', u'votes', u'certificate', u'title',
     # u'boxoffice', u'director', u'cast', u'genre',
