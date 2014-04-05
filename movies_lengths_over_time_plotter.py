@@ -4,36 +4,36 @@
 # this file is under public domain
 # caio begotti <caio1982@gmail.com>
 
-from matplotlib import pyplot
 import csv
+
+from matplotlib import pyplot
+
+INPUT='./imdb.csv'
 
 def getColumn(filename, column):
     results = csv.reader(open(filename), delimiter="|")
     return [result[column] for result in results]
 
-def plotRuntimesPerYear():
-    year = getColumn("imdb.csv", 1)
-    runtime = getColumn("imdb.csv", 3)
 
-    years = []
-    for y in year:
-        if not 'N/A' in y:
-            years.append(y)
-        else:
-            years.append('2015')
+def filterNotAvailable(list, dummy):
+    for index, entry in enumerate(list):
+        if 'N/A' in entry:
+            list[index] = dummy
+    return list
 
-    runtimes = []
-    for r in runtime:
-        if not 'N/A' in r:
-            runtimes.append(r)
-        else:
-            runtimes.append('0')
+def plotRuntimesPerYear(filename):
+    year_list = getColumn(INPUT, 1)
+    year_list = filterNotAvailable(year_list, '2015')
+
+    runtime_list = getColumn(INPUT, 3)
+    runtime_list = filterNotAvailable(runtime_list, '0')
 
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
     # all movies plotted -------------------------
     m = fig.add_subplot(211)
-    m.plot(years, runtimes, 'bx', alpha=0.25)
+
+    m.plot(year_list, runtime_list, 'bx', alpha=0.25)
 
     # we have only a few releases over 300 minutes
     # of length, they would pollute the plot
@@ -47,9 +47,20 @@ def plotRuntimesPerYear():
     pyplot.grid(True)
 
     # increase x time resolution
-    yearsticks = sorted(set([int(x) for x in years if int(x) % 5 == 0]))
+    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
     pyplot.xticks(yearsticks)
-    pyplot.savefig('imdb_runtimes_per_year.png', bbox_inches='tight', dpi=100)
+    pyplot.savefig(filename, bbox_inches='tight', dpi=100)
+
+def plotStackedRuntimesPerYear(filename):
+    year_list = getColumn(INPUT, 1)
+    year_list = filterNotAvailable(year_list, '2015')
+
+    runtime_list = getColumn(INPUT, 3)
+    runtime_list = filterNotAvailable(runtime_list, '0')
+
+    per_year_count = {}
+    for y in sorted(set(year_list)):
+        print y
 
 # averages per year --------------------------
 #averages = {}
@@ -103,6 +114,7 @@ def plotRuntimesPerYear():
 #    for y in sorted(set(years)):
 #        row = '%s; %s; %s; %s; %s\n' % (y, stacked[y][0], stacked[y][1], stacked[y][2], stacked[y][3])
 #        f.write(row)
-#    f.close()    
+#    f.close()
 
-plotRuntimesPerYear()
+plotRuntimesPerYear('imdb_runtimes_per_year.png')
+plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
