@@ -11,33 +11,45 @@ def getColumn(filename, column):
     results = csv.reader(open(filename), delimiter="|")
     return [result[column] for result in results]
 
-year = getColumn("imdb.csv", 1)
-runtime = getColumn("imdb.csv", 3)
+def plotRuntimesPerYear():
+    year = getColumn("imdb.csv", 1)
+    runtime = getColumn("imdb.csv", 3)
 
-years = []
-for y in year:
-    if not 'N/A' in y:
-        years.append(y)
-    else:
-        years.append('2015')
+    years = []
+    for y in year:
+        if not 'N/A' in y:
+            years.append(y)
+        else:
+            years.append('2015')
 
-runtimes = []
-for r in runtime:
-    if not 'N/A' in r:
-        runtimes.append(r)
-    else:
-        runtimes.append('0')
+    runtimes = []
+    for r in runtime:
+        if not 'N/A' in r:
+            runtimes.append(r)
+        else:
+            runtimes.append('0')
 
-fig = pyplot.figure(figsize=(25, 25), dpi=100)
+    fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
-# all movies plotted -------------------------
-m = fig.add_subplot(211)
-m.plot(years, runtimes, 'bx', alpha=0.25)
+    # all movies plotted -------------------------
+    m = fig.add_subplot(211)
+    m.plot(years, runtimes, 'bx', alpha=0.25)
 
-# we have only a few releases over 300 minutes
-# of length, they would pollute the plot
-m.set_xlim([1900, 2015])
-m.set_ylim([0, 300])
+    # we have only a few releases over 300 minutes
+    # of length, they would pollute the plot
+    m.set_xlim([1900, 2015])
+    m.set_ylim([0, 300])
+
+    # labels
+    pyplot.title('Movies releases and runtimes per year (~286k films)')
+    pyplot.xlabel('Year of release')
+    pyplot.ylabel('Runtime in minutes')
+    pyplot.grid(True)
+
+    # increase x time resolution
+    yearsticks = sorted(set([int(x) for x in years if int(x) % 5 == 0]))
+    pyplot.xticks(yearsticks)
+    pyplot.savefig('imdb_runtimes_per_year.png', bbox_inches='tight', dpi=100)
 
 # averages per year --------------------------
 #averages = {}
@@ -93,13 +105,4 @@ m.set_ylim([0, 300])
 #        f.write(row)
 #    f.close()    
 
-# labels
-pyplot.title('Movies releases and runtimes per year (~286k films)')
-pyplot.xlabel('Year of release')
-pyplot.ylabel('Runtime in minutes')
-pyplot.grid(True)
-
-# increase x time resolution
-yearsticks = sorted(set([int(x) for x in years if int(x) % 5 == 0]))
-pyplot.xticks(yearsticks)
-pyplot.savefig('imdb_releases.png', bbox_inches='tight', dpi=100)
+plotRuntimesPerYear()
