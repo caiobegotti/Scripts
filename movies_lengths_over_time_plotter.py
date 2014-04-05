@@ -33,12 +33,12 @@ def plotRuntimesPerYear(filename):
     # all movies plotted -------------------------
     m = fig.add_subplot(211)
 
-    m.plot(year_list, runtime_list, 'bx', alpha=0.25)
+    m.plot(year_list, runtime_list, 'x', alpha=0.25, color='#45036F')
 
     # we have only a few releases over 300 minutes
     # of length, they would pollute the plot
-    m.set_xlim([1900, 2015])
     m.set_ylim([0, 300])
+    m.set_xlim([1900, 2016])
 
     # labels
     pyplot.title('Movies releases and runtimes per year (~286k films)')
@@ -60,7 +60,27 @@ def plotStackedRuntimesPerYear(filename):
 
     per_year_count = {}
     for y in sorted(set(year_list)):
-        print y
+        per_year_count[int(y)] = int(year_list.count(y))
+
+    fig = pyplot.figure(figsize=(25, 25), dpi=100)
+
+    # all movies plotted -------------------------
+    m = fig.add_subplot(211)
+
+    m.bar(per_year_count.keys(), per_year_count.values(), color='#00665E')
+    m.set_xlim([1900, 2016])
+
+    # labels
+    pyplot.title('Total of releases year (~286k films)')
+    pyplot.xlabel('Year')
+    pyplot.ylabel('Movies released')
+    pyplot.grid(True)
+
+    # increase x time resolution
+    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
+    pyplot.xticks(yearsticks)
+    pyplot.savefig(filename, bbox_inches='tight', dpi=100)
+
 
 # averages per year --------------------------
 #averages = {}
