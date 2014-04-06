@@ -8,8 +8,6 @@ from __future__ import division
 from matplotlib import pyplot
 
 import csv
-import json
-import numpy
 
 INPUT='./imdb.csv'
 
@@ -125,6 +123,7 @@ def plotStackedRuntimesPerYear(filename):
         per_year_buckets[y] = bucket
 
     # debugging
+    # import json
     # print json.dumps(per_year_buckets, indent=4, sort_keys=True)
 
     # still dragons around here
@@ -139,6 +138,7 @@ def plotStackedRuntimesPerYear(filename):
         percentage_per_year[y] = bucket_percentages
 
     # debugging
+    # import json
     # print json.dumps(percentage_per_year, indent=4, sort_keys=True)
 
     stacks_per_year = []
@@ -159,24 +159,30 @@ def plotStackedRuntimesPerYear(filename):
     s180 = stacks_per_bucket[180]
     s300 = stacks_per_bucket[300]
 
-    ind = sorted(set(year_list))
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
-
+    ind = sorted(set(year_list))
     m = fig.add_subplot(211)
 
-    m.bar(ind, s30, width=1, edgecolor='none', color='#70C5BE')
-    m.bar(ind, s60, width=1, edgecolor='none', color='#6ABB6A', bottom=s30)
-    # m.bar(ind, s60, width, color='g', bottom=s30)
-    # m.bar(ind, s90, width, color='b', bottom=s60)
-    # m.bar(ind, s120, width, color='r', bottom=s90)
-    # m.bar(ind, s180, width, color='g', bottom=s120)
-    # m.bar(ind, s300, width, color='b', bottom=s180)
+    s90b = [sum(a) for a in zip(*[s30, s60])]
+    s120b = [sum(a) for a in zip(*[s30, s60, s90])]
+    s180b = [sum(a) for a in zip(*[s30, s60, s90, s120])]
+    s300b = [sum(a) for a in zip(*[s30, s60, s90, s120, s180])]
+
+    m.bar(ind, s30, width=1, edgecolor='none', color='#8484D5') # blue
+    m.bar(ind, s60, width=1, edgecolor='none', color='#DA8CD0', bottom=s30) # red
+    m.bar(ind, s90, width=1, edgecolor='none', color='#65CC87', bottom=s90b) # green
+    m.bar(ind, s120, width=1, edgecolor='none', color='#E4E4B1', bottom=s120b) # yellow
+    m.bar(ind, s180, width=1, edgecolor='none', color='#F0F0F0', bottom=s180b) # white
+    m.bar(ind, s300, width=1, edgecolor='none', color='#000000', bottom=s300b) # black
+
     m.set_xlim([1900, 2016])
+    m.set_ylim([0, 100])
 
     # labels
-    pyplot.title('Runtimes percentage per year (~286k films)')
-    pyplot.xlabel('Year')
-    pyplot.ylabel('Runtimes buckets')
+    pyplot.title('Percentages of runtimes buckets per year (~286k films)')
+    pyplot.xlabel('Runtimes per year')
+    pyplot.ylabel('Percentages of runtimes buckets')
+    pyplot.margins(0, 0)
     pyplot.grid(True)
 
     # increase x time resolution
