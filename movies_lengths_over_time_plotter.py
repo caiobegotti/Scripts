@@ -233,14 +233,115 @@ def plotStackedRuntimesPerYear(filename):
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
-print 'plotReleasesPerYear'
-plotReleasesPerYear('imdb_releases_per_year.png')
+def plotLongOnesPerYear(filename):
+    year_list = getColumn(INPUT, 1)
+    year_list = filterNotAvailable(year_list, '2015')
 
-print 'plotBoxofficePerYear'
-plotBoxofficePerYear('imdb_boxoffice_per_year.png')
+    runtime_list = getColumn(INPUT, 3)
+    runtime_list = filterNotAvailable(runtime_list, '0')
 
-print 'plotRuntimesPerYear'
-plotRuntimesPerYear('imdb_runtimes_per_year.png')
+    year_list = [int(x) for x in year_list]
+    runtime_list = [int(x) for x in runtime_list]
 
-print 'plotStackedRuntimesPerYear'
-plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
+    # here be dragons!
+    # close your eyes and they disappear
+    per_year_buckets = {}
+    for y in sorted(set(year_list)):
+        bucket = {}
+        b30 = b60 = b90 = b120 = b180 = b300 = 0
+        for row in zip(year_list, runtime_list):
+            if row[0] == y:
+                r = row[1]
+                if r <= 30:
+                    b30 += 1
+                if r > 31 and r <= 60:
+                    b60 += 1
+                if r > 61 and r <= 90:
+                    b90 += 1
+                if r > 91 and r <= 120:
+                    b120 += 1
+                if r > 121 and r <= 180:
+                    b180 += 1
+                if r > 181:
+                    b300 += 1
+                bucket[30] = b30
+                bucket[60] = b60
+                bucket[90] = b90
+                bucket[120] = b120
+                bucket[180] = b180
+                bucket[300] = b300
+        per_year_buckets[y] = bucket
+
+    # debugging
+    # import json
+    # print json.dumps(per_year_buckets, indent=4, sort_keys=True)
+
+    # still dragons around here
+    percentage_per_year = {}
+    for y in sorted(set(year_list)):
+        total_of_year = sum(per_year_buckets[y].values())
+        bucket_percentages = {}
+        for bucket in per_year_buckets[y].keys():
+            total_of_bucket = per_year_buckets[y][bucket]
+            try:
+                percentage = float((total_of_bucket / total_of_year ) * 100)
+            except ZeroDivisionError:
+                percentage = 0
+            bucket_percentages[bucket] = percentage
+        percentage_per_year[y] = bucket_percentages
+
+    # debugging
+    # import json
+    # print json.dumps(percentage_per_year, indent=4, sort_keys=True)
+
+    stacks_per_year = []
+    for y in sorted(set(year_list)):
+        stacks_per_year.append(percentage_per_year[y].values())
+
+    stacks_per_bucket = {}
+    for p in percentage_per_year[y].keys():
+        points = []
+        for y in percentage_per_year.keys():
+            points.append(percentage_per_year[y][p])
+        stacks_per_bucket[p] = points
+
+    s120 = stacks_per_bucket[120]
+    s180 = stacks_per_bucket[180]
+
+    fig = pyplot.figure(figsize=(25, 25), dpi=100)
+    ind = sorted(set(year_list))
+    m = fig.add_subplot(211)
+
+    m.plot(ind, s120, label="Between 2h-3h", linestyle="-", linewidth=10, color='r')
+    m.plot(ind, s180, label="Over 3h", linestyle="-", linewidth=1, color='b')
+
+    m.set_xlim([1990, 2016])
+    m.set_ylim([0, 50])
+
+    # labels
+    pyplot.legend(loc='upper left')
+    pyplot.title('Percentages of runtimes buckets per year (~286k films)')
+    pyplot.xlabel('Runtimes per year')
+    pyplot.ylabel('Percentages of runtimes buckets')
+    pyplot.margins(0, 0)
+    pyplot.grid(True)
+
+    # increase x time resolution
+    yearsticks = sorted(set([x for x in year_list if x % 5 == 0]))
+    pyplot.xticks(yearsticks)
+    pyplot.savefig(filename, bbox_inches='tight', dpi=100)
+
+#print 'plotReleasesPerYear'
+#plotReleasesPerYear('imdb_releases_per_year.png')
+
+#print 'plotBoxofficePerYear'
+#plotBoxofficePerYear('imdb_boxoffice_per_year.png')
+
+#print 'plotRuntimesPerYear'
+#plotRuntimesPerYear('imdb_runtimes_per_year.png')
+
+#print 'plotStackedRuntimesPerYear'
+#plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
+
+print 'plotLongOnesPerYear'
+plotLongOnesPerYear('imdb_long_ones_per_year.png')
