@@ -165,6 +165,7 @@ def plotStackedRuntimesPerYear(filename):
     m = fig.add_subplot(211)
 
     m.bar(ind, s30, width=1, edgecolor='none', color='#70C5BE')
+    m.bar(ind, s60, width=1, edgecolor='none', color='#6ABB6A', bottom=s30)
     # m.bar(ind, s60, width, color='g', bottom=s30)
     # m.bar(ind, s90, width, color='b', bottom=s60)
     # m.bar(ind, s120, width, color='r', bottom=s90)
