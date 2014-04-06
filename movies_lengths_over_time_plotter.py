@@ -4,10 +4,11 @@
 # this file is under public domain
 # caio begotti <caio1982@gmail.com>
 
+from __future__ import division
+from matplotlib import pyplot
+
 import csv
 import json
-
-from matplotlib import pyplot
 
 INPUT='./imdb.csv'
 
@@ -112,7 +113,15 @@ def plotStackedRuntimesPerYear(filename):
                 bucket[180] = b180
                 bucket[300] = b300
         per_year_buckets[y] = bucket
-    print json.dumps(per_year_buckets, indent=4, sort_keys=True)
+    # debugging
+    # print json.dumps(per_year_buckets, indent=4, sort_keys=True)
+    percentage_per_year = {}
+    for y in sorted(set(year_list)):
+        total_of_year = int(sum(per_year_buckets[y].values()))
+        for bucket in per_year_buckets[y].keys():
+            total_of_bucket = int(per_year_buckets[y][bucket])
+            percentage = float((total_of_bucket / total_of_year ) * 100)
+            print y, total_of_year, bucket, total_of_bucket, percentage
 
 # averages per year --------------------------
 #averages = {}
