@@ -31,6 +31,9 @@ def plotRuntimesPerYear(filename):
     runtime_list = getColumn(INPUT, 3)
     runtime_list = filterNotAvailable(runtime_list, '0')
 
+    year_list = [int(x) for x in year_list]
+    runtime_list = [int(x) for x in runtime_list]
+
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
     m = fig.add_subplot(211)
@@ -47,7 +50,7 @@ def plotRuntimesPerYear(filename):
     pyplot.grid(True)
 
     # increase x time resolution
-    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
+    yearsticks = sorted(set([x for x in year_list if x % 5 == 0]))
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
@@ -58,9 +61,12 @@ def plotReleasesPerYear(filename):
     runtime_list = getColumn(INPUT, 3)
     runtime_list = filterNotAvailable(runtime_list, '0')
 
+    year_list = [int(x) for x in year_list]
+    runtime_list = [int(x) for x in runtime_list]
+
     per_year_count = {}
     for y in sorted(set(year_list)):
-        per_year_count[int(y)] = int(year_list.count(y))
+        per_year_count[y] = year_list.count(y)
 
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
@@ -75,7 +81,7 @@ def plotReleasesPerYear(filename):
     pyplot.grid(True)
 
     # increase x time resolution
-    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
+    yearsticks = sorted(set([x for x in year_list if x % 5 == 0]))
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
@@ -86,6 +92,9 @@ def plotStackedRuntimesPerYear(filename):
     runtime_list = getColumn(INPUT, 3)
     runtime_list = filterNotAvailable(runtime_list, '0')
 
+    year_list = [int(x) for x in year_list]
+    runtime_list = [int(x) for x in runtime_list]
+
     # here be dragons!
     # close your eyes and they disappear
     per_year_buckets = {}
@@ -94,7 +103,7 @@ def plotStackedRuntimesPerYear(filename):
         b30 = b60 = b90 = b120 = b180 = b300 = 0
         for row in zip(year_list, runtime_list):
             if row[0] == y:
-                r = int(row[1])
+                r = row[1]
                 if r <= 30:
                     b30 += 1
                 if r > 31 and r <= 60:
@@ -121,10 +130,10 @@ def plotStackedRuntimesPerYear(filename):
     # still dragons around here
     percentage_per_year = {}
     for y in sorted(set(year_list)):
-        total_of_year = int(sum(per_year_buckets[y].values()))
+        total_of_year = sum(per_year_buckets[y].values())
         bucket_percentages = {}
         for bucket in per_year_buckets[y].keys():
-            total_of_bucket = int(per_year_buckets[y][bucket])
+            total_of_bucket = per_year_buckets[y][bucket]
             percentage = float((total_of_bucket / total_of_year ) * 100)
             bucket_percentages[bucket] = percentage
         percentage_per_year[y] = bucket_percentages
@@ -150,19 +159,17 @@ def plotStackedRuntimesPerYear(filename):
     s180 = stacks_per_bucket[180]
     s300 = stacks_per_bucket[300]
 
-    # number of buckets in stacked bars
-    ind = numpy.arange(116)
-    width = 5
-
+    ind = sorted(set(year_list))
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
     m = fig.add_subplot(211)
-    m.bar(ind, s30, width, color='r', yerr=s60)
-    m.bar(ind, s60, width, color='g', bottom=s30, yerr=s90)
-    m.bar(ind, s90, width, color='b', bottom=s60, yerr=s120)
-    m.bar(ind, s120, width, color='r', bottom=s90, yerr=s180)
-    m.bar(ind, s180, width, color='g', bottom=s120, yerr=s300)
-    m.bar(ind, s300, width, color='b', bottom=s180, yerr=s30)
+
+    m.bar(ind, s30, width=1, edgecolor='none', color='#70C5BE')
+    # m.bar(ind, s60, width, color='g', bottom=s30)
+    # m.bar(ind, s90, width, color='b', bottom=s60)
+    # m.bar(ind, s120, width, color='r', bottom=s90)
+    # m.bar(ind, s180, width, color='g', bottom=s120)
+    # m.bar(ind, s300, width, color='b', bottom=s180)
     m.set_xlim([1900, 2016])
 
     # labels
@@ -172,7 +179,7 @@ def plotStackedRuntimesPerYear(filename):
     pyplot.grid(True)
 
     # increase x time resolution
-    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
+    yearsticks = sorted(set([x for x in year_list if x % 5 == 0]))
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
