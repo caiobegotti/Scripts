@@ -168,15 +168,20 @@ def plotStackedRuntimesPerYear(filename):
     s180b = [sum(a) for a in zip(*[s30, s60, s90, s120])]
     s300b = [sum(a) for a in zip(*[s30, s60, s90, s120, s180])]
 
-    m.bar(ind, s30, width=1, edgecolor='none', color='#8484D5') # blue
-    m.bar(ind, s60, width=1, edgecolor='none', color='#DA8CD0', bottom=s30) # red
-    m.bar(ind, s90, width=1, edgecolor='none', color='#65CC87', bottom=s90b) # green
-    m.bar(ind, s120, width=1, edgecolor='none', color='#E4E4B1', bottom=s120b) # yellow
-    m.bar(ind, s180, width=1, edgecolor='none', color='#F0F0F0', bottom=s180b) # white
-    m.bar(ind, s300, width=1, edgecolor='none', color='#000000', bottom=s300b) # black
+    s1 = m.bar(ind, s30, width=1, edgecolor='none', color='#8484D5') # purple
+    s2 = m.bar(ind, s60, width=1, edgecolor='none', color='#DA8CD0', bottom=s30) # red
+    s3 = m.bar(ind, s90, width=1, edgecolor='none', color='#65CC87', bottom=s90b) # green
+    s4 = m.bar(ind, s120, width=1, edgecolor='none', color='#E4E4B1', bottom=s120b) # yellow
+    s5 = m.bar(ind, s180, width=1, edgecolor='none', color='#8AB0D8', bottom=s180b) # blue
+    s6 = m.bar(ind, s300, width=1, edgecolor='none', color='#000000', bottom=s300b) # black
 
     m.set_xlim([1900, 2016])
     m.set_ylim([0, 100])
+
+    # legend box setup
+    colors = [s1, s2, s3, s4, s5, s6]
+    labels = ['< 30 min', 'up to 60 min', 'up to 90 min', 'up to 2 hours', 'up to 3 hours', '> 3 hours']
+    pyplot.legend(colors, labels, fancybox=True, loc="lower center")
 
     # labels
     pyplot.title('Percentages of runtimes buckets per year (~286k films)')
