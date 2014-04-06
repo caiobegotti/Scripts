@@ -9,6 +9,7 @@ from matplotlib import pyplot
 
 import csv
 import json
+import numpy
 
 INPUT='./imdb.csv'
 
@@ -113,69 +114,67 @@ def plotStackedRuntimesPerYear(filename):
                 bucket[180] = b180
                 bucket[300] = b300
         per_year_buckets[y] = bucket
+
     # debugging
     # print json.dumps(per_year_buckets, indent=4, sort_keys=True)
+
+    # still dragons around here
     percentage_per_year = {}
     for y in sorted(set(year_list)):
         total_of_year = int(sum(per_year_buckets[y].values()))
+        bucket_percentages = {}
         for bucket in per_year_buckets[y].keys():
             total_of_bucket = int(per_year_buckets[y][bucket])
             percentage = float((total_of_bucket / total_of_year ) * 100)
-            print y, total_of_year, bucket, total_of_bucket, percentage
+            bucket_percentages[bucket] = percentage
+        percentage_per_year[y] = bucket_percentages
 
-# averages per year --------------------------
-#averages = {}
-#for t in sorted(set(years)):
-#    thisyear = []
-#    for y, r in zip(years, runtimes):
-#        if y == t:
-#            thisyear.append(r)
-#    total = len(thisyear)
-#    thisyear = [float(x) for x in thisyear]
-#    averages[t] = int(sum(thisyear) / total)
-#
-#for key in sorted(averages.iterkeys()):
-#    print key, averages[key]
-#
-#a = fig.add_subplot(211)
-#a.plot(averages.keys(), averages.values(), color='w', linestyle='-', linewidth=5)
-#a.plot(averages.keys(), averages.values(), color='r', linestyle='-', linewidth=3)
-#
-# total number of releases per year ----------
-#releases = {}
-#for t in sorted(set(years)):
-#    thisyear = []
-#    for y, r in zip(years, runtimes):
-#        if y == t:
-#            thisyear.append(r)
-#    releases[t] = len(thisyear)
-#
-#r = fig.add_subplot(211)
-#r.set_xlim([1900, 2014])
-#r.plot(releases.keys(), releases.values(), color='g', linestyle='-', linewidth=5)
-#
-# stacked bars of common lengths -------------
-#stacked = {}
-#for t in sorted(set(years)):
-#    t1, t2, t3, t4 = 0, 0, 0, 0
-#    for y, r in zip(years, runtimes):
-#        if r <= 60 and y == t:
-#            t1 += 1
-#        if r > 60 and r <= 120 and y ==t:
-#            t2 += 1
-#        if r > 120 and r <= 180 and y == t:
-#            t3 += 1
-#        if r > 180 and y == t:
-#            t4 += 1
-#    stacked[t] = (t1, t2, t3, t4)
-#
-# i can simply plot.ly for the stacked bars instead
-#with open('plotly.csv', 'a') as f:
-#    f.seek(0)
-#    for y in sorted(set(years)):
-#        row = '%s; %s; %s; %s; %s\n' % (y, stacked[y][0], stacked[y][1], stacked[y][2], stacked[y][3])
-#        f.write(row)
-#    f.close()
+    # debugging
+    # print json.dumps(percentage_per_year, indent=4, sort_keys=True)
+
+    stacks_per_year = []
+    for y in sorted(set(year_list)):
+        stacks_per_year.append(percentage_per_year[y].values())
+
+    stacks_per_bucket = {}
+    for p in percentage_per_year[y].keys():
+        points = []
+        for y in percentage_per_year.keys():
+            points.append(percentage_per_year[y][p])
+        stacks_per_bucket[p] = points
+
+    s30 = stacks_per_bucket[30]
+    s60 = stacks_per_bucket[60]
+    s90 = stacks_per_bucket[90]
+    s120 = stacks_per_bucket[120]
+    s180 = stacks_per_bucket[180]
+    s300 = stacks_per_bucket[300]
+
+    # number of buckets in stacked bars
+    ind = numpy.arange(116)
+    width = 5
+
+    fig = pyplot.figure(figsize=(25, 25), dpi=100)
+
+    m = fig.add_subplot(211)
+    m.bar(ind, s30, width, color='r', yerr=s60)
+    m.bar(ind, s60, width, color='g', bottom=s30, yerr=s90)
+    m.bar(ind, s90, width, color='b', bottom=s60, yerr=s120)
+    m.bar(ind, s120, width, color='r', bottom=s90, yerr=s180)
+    m.bar(ind, s180, width, color='g', bottom=s120, yerr=s300)
+    m.bar(ind, s300, width, color='b', bottom=s180, yerr=s30)
+    m.set_xlim([1900, 2016])
+
+    # labels
+    pyplot.title('Runtimes percentage per year (~286k films)')
+    pyplot.xlabel('Year')
+    pyplot.ylabel('Runtimes buckets')
+    pyplot.grid(True)
+
+    # increase x time resolution
+    yearsticks = sorted(set([int(x) for x in year_list if int(x) % 5 == 0]))
+    pyplot.xticks(yearsticks)
+    pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
 print 'plotReleasesPerYear'
 plotReleasesPerYear('imdb_releases_per_year.png')
