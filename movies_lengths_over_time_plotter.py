@@ -15,6 +15,21 @@ def getColumn(filename, column):
     results = csv.reader(open(filename), delimiter="|")
     return [result[column] for result in results]
 
+def normalizeBoxoffice(value):
+    ret = value
+    if '.' in ret:
+        if 'K' in ret:
+            ret = ret.replace('K', '00')
+            ret = ret.replace('.', '')
+        elif 'M' in ret:
+            ret = ret.replace('M', '00000')
+            ret = ret.replace('.', '')
+    else:
+        if 'K' in ret:
+            ret = ret.replace('K', '000')
+        elif 'M' in ret:
+            ret = ret.replace('M', '000000')
+    return ret
 
 def filterNotAvailable(list, dummy):
     for index, entry in enumerate(list):
@@ -56,11 +71,7 @@ def plotReleasesPerYear(filename):
     year_list = getColumn(INPUT, 1)
     year_list = filterNotAvailable(year_list, '2015')
 
-    runtime_list = getColumn(INPUT, 3)
-    runtime_list = filterNotAvailable(runtime_list, '0')
-
     year_list = [int(x) for x in year_list]
-    runtime_list = [int(x) for x in runtime_list]
 
     per_year_count = {}
     for y in sorted(set(year_list)):
@@ -76,6 +87,33 @@ def plotReleasesPerYear(filename):
     pyplot.title('Total of releases year (~286k films)')
     pyplot.xlabel('Year')
     pyplot.ylabel('Movies released')
+    pyplot.grid(True)
+
+    # increase x time resolution
+    yearsticks = sorted(set([x for x in year_list if x % 5 == 0]))
+    pyplot.xticks(yearsticks)
+    pyplot.savefig(filename, bbox_inches='tight', dpi=100)
+
+def plotBoxofficePerYear(filename):
+    year_list = getColumn(INPUT, 1)
+    year_list = filterNotAvailable(year_list, '2015')
+
+    gross_list = getColumn(INPUT, 4)
+    gross_list = filterNotAvailable(gross_list, '0')
+
+    year_list = [int(x) for x in year_list]
+    gross_list = [int(normalizeBoxoffice(x)) for x in gross_list]
+
+    fig = pyplot.figure(figsize=(25, 25), dpi=100)
+
+    m = fig.add_subplot(211)
+    m.bar(year_list, gross_list, color='#64BE3F')
+    m.set_xlim([1900, 2016])
+
+    # labels
+    pyplot.title('Total boxoffice gross (~286k films)')
+    pyplot.xlabel('Year')
+    pyplot.ylabel('Boxoffice')
     pyplot.grid(True)
 
     # increase x time resolution
@@ -197,6 +235,9 @@ def plotStackedRuntimesPerYear(filename):
 
 print 'plotReleasesPerYear'
 plotReleasesPerYear('imdb_releases_per_year.png')
+
+print 'plotBoxofficePerYear'
+plotBoxofficePerYear('imdb_boxoffice_per_year.png')
 
 print 'plotRuntimesPerYear'
 plotRuntimesPerYear('imdb_runtimes_per_year.png')
