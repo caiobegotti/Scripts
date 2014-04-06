@@ -5,6 +5,7 @@
 # caio begotti <caio1982@gmail.com>
 
 import csv
+import json
 
 from matplotlib import pyplot
 
@@ -30,9 +31,7 @@ def plotRuntimesPerYear(filename):
 
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
-    # all movies plotted -------------------------
     m = fig.add_subplot(211)
-
     m.plot(year_list, runtime_list, 'x', alpha=0.25, color='#45036F')
 
     # we have only a few releases over 300 minutes
@@ -40,7 +39,6 @@ def plotRuntimesPerYear(filename):
     m.set_ylim([0, 300])
     m.set_xlim([1900, 2016])
 
-    # labels
     pyplot.title('Movies releases and runtimes per year (~286k films)')
     pyplot.xlabel('Year of release')
     pyplot.ylabel('Runtime in minutes')
@@ -51,7 +49,7 @@ def plotRuntimesPerYear(filename):
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
-def plotStackedRuntimesPerYear(filename):
+def plotReleasesPerYear(filename):
     year_list = getColumn(INPUT, 1)
     year_list = filterNotAvailable(year_list, '2015')
 
@@ -64,9 +62,7 @@ def plotStackedRuntimesPerYear(filename):
 
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
-    # all movies plotted -------------------------
     m = fig.add_subplot(211)
-
     m.bar(per_year_count.keys(), per_year_count.values(), color='#00665E')
     m.set_xlim([1900, 2016])
 
@@ -81,6 +77,42 @@ def plotStackedRuntimesPerYear(filename):
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
+def plotStackedRuntimesPerYear(filename):
+    year_list = getColumn(INPUT, 1)
+    year_list = filterNotAvailable(year_list, '2015')
+
+    runtime_list = getColumn(INPUT, 3)
+    runtime_list = filterNotAvailable(runtime_list, '0')
+
+    # here be dragons!
+    # close your eyes and they disappear
+    per_year_buckets = {}
+    for y in sorted(set(year_list)):
+        bucket = {}
+        b30 = b60 = b90 = b120 = b180 = b300 = 0
+        for row in zip(year_list, runtime_list):
+            if row[0] == y:
+                r = int(row[1])
+                if r <= 30:
+                    b30 += 1
+                if r > 31 and r <= 60:
+                    b60 += 1
+                if r > 61 and r <= 90:
+                    b90 += 1
+                if r > 91 and r <= 120:
+                    b120 += 1
+                if r > 121 and r <= 180:
+                    b180 += 1
+                if r > 181:
+                    b300 += 1
+                bucket[30] = b30
+                bucket[60] = b60
+                bucket[90] = b90
+                bucket[120] = b120
+                bucket[180] = b180
+                bucket[300] = b300
+        per_year_buckets[y] = bucket
+    print json.dumps(per_year_buckets, indent=4, sort_keys=True)
 
 # averages per year --------------------------
 #averages = {}
@@ -136,5 +168,11 @@ def plotStackedRuntimesPerYear(filename):
 #        f.write(row)
 #    f.close()
 
+print 'plotReleasesPerYear'
+plotReleasesPerYear('imdb_releases_per_year.png')
+
+print 'plotRuntimesPerYear'
 plotRuntimesPerYear('imdb_runtimes_per_year.png')
+
+print 'plotStackedRuntimesPerYear'
 plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
