@@ -312,17 +312,17 @@ def plotLongOnesPerYear(filename):
     ind = sorted(set(year_list))
     m = fig.add_subplot(211)
 
-    m.plot(ind, s120, label="Between 2h-3h", linestyle="-", linewidth=10, color='r')
-    m.plot(ind, s180, label="Over 3h", linestyle="-", linewidth=1, color='b')
+    m.plot(ind, s120, label="Between 2h-3h long", linestyle="-", linewidth=10, color='r')
+    m.plot(ind, s180, label="Over 3h long", linestyle="-", linewidth=1, color='b')
 
     m.set_xlim([1990, 2016])
     m.set_ylim([0, 50])
 
     # labels
     pyplot.legend(loc='upper left')
-    pyplot.title('Percentages of runtimes buckets per year (~286k films)')
-    pyplot.xlabel('Runtimes per year')
-    pyplot.ylabel('Percentages of runtimes buckets')
+    pyplot.title('Percentages of long movies per year (~286k films)')
+    pyplot.xlabel('Year')
+    pyplot.ylabel('Percentages of long movies in the year')
     pyplot.margins(0, 0)
     pyplot.grid(True)
 
@@ -331,17 +331,17 @@ def plotLongOnesPerYear(filename):
     pyplot.xticks(yearsticks)
     pyplot.savefig(filename, bbox_inches='tight', dpi=100)
 
-#print 'plotReleasesPerYear'
-#plotReleasesPerYear('imdb_releases_per_year.png')
+print 'plotReleasesPerYear'
+plotReleasesPerYear('imdb_releases_per_year.png')
 
-#print 'plotBoxofficePerYear'
-#plotBoxofficePerYear('imdb_boxoffice_per_year.png')
+print 'plotBoxofficePerYear'
+plotBoxofficePerYear('imdb_boxoffice_per_year.png')
 
-#print 'plotRuntimesPerYear'
-#plotRuntimesPerYear('imdb_runtimes_per_year.png')
+print 'plotRuntimesPerYear'
+plotRuntimesPerYear('imdb_runtimes_per_year.png')
 
-#print 'plotStackedRuntimesPerYear'
-#plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
+print 'plotStackedRuntimesPerYear'
+plotStackedRuntimesPerYear('imdb_runtimes_per_year_stacked.png')
 
 print 'plotLongOnesPerYear'
 plotLongOnesPerYear('imdb_long_ones_per_year.png')
