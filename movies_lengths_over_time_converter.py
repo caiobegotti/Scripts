@@ -13,13 +13,21 @@ with open('imdb.json', 'r', 'utf8') as f:
     f.close()
     for entry in loaded:
         x = loaded[entry]
-        row = '|'.join(x.values()) + '|' + entry
+        row = '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s' % (entry,
+                                                       x['release'],
+                                                       x['title'],
+                                                       x['runtime'],
+                                                       x['boxoffice'],
+                                                       x['votes'],
+                                                       x['rating'],
+                                                       x['certificate'],
+                                                       x['genre'],
+                                                       x['director'],
+                                                       x['cast'],
+                                                       x['thumbnail'])
         rows.append(row)
 
 with open('imdb.csv', 'a', 'utf8') as csv:
     csv.seek(0)
-    # u'rating', u'votes', u'certificate', u'title',
-    # u'boxoffice', u'director', u'cast', u'genre',
-    # u'release', u'runtime', u'thumbnail', entry URL
     csv.write('\n'.join(rows))
     csv.close()
