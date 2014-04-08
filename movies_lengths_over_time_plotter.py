@@ -102,12 +102,12 @@ def plotBoxofficePerYear(filename):
     gross_list = filterNotAvailable(gross_list, '0')
 
     year_list = [int(x) for x in year_list]
-    gross_list = [int(normalizeBoxoffice(x)) for x in gross_list]
+    gross_list = [int(normalizeBoxoffice(x)) / 1000000 for x in gross_list]
 
     fig = pyplot.figure(figsize=(25, 25), dpi=100)
 
     m = fig.add_subplot(211)
-    m.bar(year_list, gross_list, color='#64BE3F')
+    m.plot(year_list, gross_list, 'x', color='#64BE3F')
     m.set_xlim([1900, 2016])
 
     # labels
