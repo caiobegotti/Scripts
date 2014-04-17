@@ -118,7 +118,7 @@ def appfunc():
                 genres = entry('span', class_='genre')
                 if not len(genres) == 0:
                     for genre in genres:
-                        rowdict['genre'] = genre.a.text
+                        rowdict['genre'] = genre.text.replace(' | ', ', ')
                 else:
                     rowdict['genre'] = 'N/A'
 
