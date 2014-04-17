@@ -34,7 +34,7 @@ RE_VOTES = re.compile("([\d,]{1,})", re.IGNORECASE)
 def appfunc():
     files = glob('backup/*.html')
     moviedict = {}
-    for file in files:
+    for file in sorted(files, reverse=True):
         with open(file, 'r') as f:
             soup = bs(f.read())
             entries = soup('td', class_='title')
@@ -56,20 +56,23 @@ def appfunc():
                 sortcol = parent('td', class_='sort_col')
                 if not len(sortcol) == 0:
                     for par in sortcol:
-                        boxre = RE_BOXOFFICE.findall(par.text)
-                        votesre = RE_VOTES.findall(par.text)
-                        if boxre:
-                            rowdict['boxoffice'] = boxre[0]
-                        else:
-                            rowdict['boxoffice'] = 'N/A'
-
-                        if votesre:
-                            rowdict['votes'] = votesre[0]
-                        else:
-                            rowdict['votes'] = 'N/A'
+                        if 'gross' in file:
+                            boxre = RE_BOXOFFICE.findall(par.text)
+                            if boxre:
+                                rowdict['boxoffice'] = boxre[0]
+                            else:
+                                rowdict['boxoffice'] = 'N/A'
+                        if 'votes' in file:
+                            votesre = RE_VOTES.findall(par.text)
+                            if votesre:
+                                rowdict['votes'] = votesre[0]
+                            else:
+                                rowdict['votes'] = 'N/A'
                 else:
-                    rowdict['boxoffice'] = 'N/A'
-                    rowdict['votes'] = 'N/A'
+                    if 'boxoffice' not in rowdict:
+                        rowdict['boxoffice'] = 'N/A'
+                    if 'votes' not in rowdict:
+                        rowdict['votes'] = 'N/A'
 
                 # credits
                 credits = entry('span', class_='credit')
