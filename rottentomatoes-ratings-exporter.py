@@ -5,14 +5,12 @@ from sys import argv, exit
 from lxml import etree
 
 if not len(argv) == 2:
-    exit('Usage: ' + argv[0] + ' <your saved page with rottentomatoes ratings>.html')
+    exit('Usage: ' + argv[0] + ' <saved page with rottentomatoes ratings>')
 
 parser = etree.HTMLParser(huge_tree=True)
 tree = etree.parse(argv[1], parser)
 
 movies = tree.xpath('//div[@class="media bottom_divider"]')
-
-data = []
 
 for m in movies:
     ratings = m.xpath('.//div[@style="color:#F1870A"]')
