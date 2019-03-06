@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-#
-# this file is under public domain
-# caio begotti <caiobegotti@gmail.com>
+# public domain
 
 from sys import argv, exit
 from lxml import etree
