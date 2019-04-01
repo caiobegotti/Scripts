@@ -12,6 +12,7 @@ tree = etree.parse(argv[1], parser)
 
 movies = tree.xpath('//div[@class="media bottom_divider"]')
 
+print('TITLE, YEAR, RATING')
 for m in movies:
     ratings = m.xpath('.//div[@style="color:#F1870A"]')
     titles = m.xpath('.//a[@class="pull-left"]/@title')
