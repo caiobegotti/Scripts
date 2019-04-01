@@ -21,4 +21,4 @@ for m in movies:
         rating = len(z[2])
         title = z[0].replace('\\', '')
         year = z[1].translate({ord(i): None for i in '()'})
-        print('{}, {}, {}'.format(title, year, rating))
+        print('"{}", "{}", "{}"'.format(title, year, rating))
