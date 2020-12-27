@@ -1,48 +1,4 @@
 TITLE, YEAR, RATING
-"The Forum", 2020, 2
-"State of Play", 2009, 3
-"The Devil All the Time", 2020, 5
-"This is 40", 2012, 4
-"The King", 2019, 3
-"Pontypool", 2009, 2
-"Burning", 2018, 5
-"Rear Window", 1954, 4
-"Zorba the Greek", 1964, 3
-"Funny Face", 1957, 3
-"Vertigo", 1958, 1
-"42", 2013, 1
-"Out of the Past", 1947, 3
-"The Man from U.N.C.L.E.", 2015, 2
-"Ava", 2020, 1
-"Dunkirk", 2017, 1
-"Odd Man Out", 1947, 1
-"The Trial of the Chicago 7", 2020, 5
-"Solomon Kane", 2012, 1
-"Creed II", 2018, 2
-"Borat Subsequent Moviefilm", 2020, 2
-"Mulan", 2020, 3
-"Star Trek Generations", 1994, 1
-"Star Trek: First Contact", 1996, 3
-"Norma Rae", 1979, 5
-"Empire of the Sun", 1987, 5
-"The SpongeBob Movie: Sponge on the Run", 2020, 3
-"Citizen Kane", 1941, 4
-"Rio Bravo", 1959, 2
-"Marshall", 2017, 2
-"Hell's Angels", 1930, 5
-"Prelude to War", 1942, 5
-"Geostorm", 2017, 1
-"La Vingança", 2016, 2
-"A Hologram for the King", 2016, 3
-"What About Bob?", 1991, 3
-"Kramer vs. Kramer", 1979, 5
-"Mank", 2020, 5
-"Ma Rainey's Black Bottom", 2020, 5
-"The Midnight Sky", 2020, 1
-"Wonder Woman 1984", 2020, 3
-"Tenet", 2020, 3
-"Sophie's Choice", 1982, 4
-"Soul", 2020, 1
 "Forbidden Planet", 1956, ?
 "The 39 Steps", 1935, ?
 "Rio Bravo", 1959, ?
@@ -148,6 +104,50 @@ TITLE, YEAR, RATING
 "Dogville", 2003, ?
 "The War of the Worlds", 1953, ?
 "Ocean's Eleven", 1960, ?
+"The Forum", 2020, 2
+"State of Play", 2009, 3
+"The Devil All the Time", 2020, 5
+"This is 40", 2012, 4
+"The King", 2019, 3
+"Pontypool", 2009, 2
+"Burning", 2018, 5
+"Rear Window", 1954, 4
+"Zorba the Greek", 1964, 3
+"Funny Face", 1957, 3
+"Vertigo", 1958, 1
+"42", 2013, 1
+"Out of the Past", 1947, 3
+"The Man from U.N.C.L.E.", 2015, 2
+"Ava", 2020, 1
+"Dunkirk", 2017, 1
+"Odd Man Out", 1947, 1
+"The Trial of the Chicago 7", 2020, 5
+"Solomon Kane", 2012, 1
+"Creed II", 2018, 2
+"Borat Subsequent Moviefilm", 2020, 2
+"Mulan", 2020, 3
+"Star Trek Generations", 1994, 1
+"Star Trek: First Contact", 1996, 3
+"Norma Rae", 1979, 5
+"Empire of the Sun", 1987, 5
+"The SpongeBob Movie: Sponge on the Run", 2020, 3
+"Citizen Kane", 1941, 4
+"Rio Bravo", 1959, 2
+"Marshall", 2017, 2
+"Hell's Angels", 1930, 5
+"Prelude to War", 1942, 5
+"Geostorm", 2017, 1
+"La Vingança", 2016, 2
+"A Hologram for the King", 2016, 3
+"What About Bob?", 1991, 3
+"Kramer vs. Kramer", 1979, 5
+"Mank", 2020, 5
+"Ma Rainey's Black Bottom", 2020, 5
+"The Midnight Sky", 2020, 1
+"Wonder Woman 1984", 2020, 3
+"Tenet", 2020, 3
+"Sophie's Choice", 1982, 4
+"Soul", 2020, 1
 "The Intern", 2015, 4
 "Collateral Beauty", 2016, 3
 "Project Power", 2020, 1
