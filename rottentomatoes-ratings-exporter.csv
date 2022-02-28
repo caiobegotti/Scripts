@@ -1,45 +1,4 @@
 TITLE, YEAR, RATING
-"Casino", 1993, 3
-"The Manchurian Candidate", 1962, 5
-"Easy Rider", 1969, 4
-"The Mission", 2004, 4
-"Midnight Run", 1988, 5
-"Once Upon a Time in America", 1984, 5
-"Rose Island", 2020, 4
-"The 5th Wave", 2016, 1
-"The Jackal", 1997, 1
-"Space Sweepers", 2021, 4
-"Finch", 2021, 4
-"News of the World", 2020, 1
-"Malcolm & Marie", 2021, 5
-"Hillbilly Elegy", 2020, 4
-"I Care a Lot", 2020, 5
-"Us", 2019, 5
-"Queen & Slim", 2019, 5
-"Yes Day", 2021, 3
-"Corrina, Corrina", 1994, 2
-"A Ghost Story", 2017, 5
-"Godzilla vs. Kong", 2021, 4
-"Love and Monsters", 2020, 2
-"Still Walking", 2011, 3
-"Radioactive", 2019, 4
-"Run", 2020, 4
-"The Red Sea Diving Resort", 2019, 3
-"Oxygen", 2021, 2
-"Concrete Cowboy", 2021, 2
-"The Wedding Guest", 2018, 3
-"The Poison Rose", 2019, 1
-"The Tomorrow War", 2021, 1
-"Without Remorse", 2021, 2
-"Fear Street: Part One - 1994", 2021, 2
-"Fear Street Part Two: 1978", 2021, 2
-"The Orphanage", 2008, 5
-"Midsommar", 2019, 4
-"21 Bridges", 2019, 3
-"Unhinged", 2020, 2
-"Luca", 2021, 2
-"Blood Red Sky", 2021, 1
-"Dune", 2021, 5
 "Forbidden Planet", 1956, ?
 "The 39 Steps", 1935, ?
 "Aguirre: The Wrath of God", 1972, ?
@@ -51,7 +10,6 @@ TITLE, YEAR, RATING
 "Rushmore", 1998, ?
 "Guy and Madeline on a Park Bench", 2009, ?
 "Friedkin Uncut", 2018, ?
-"Us", 2019, ?
 "Captains of the Sands", 2011, ?
 "The Salt of the Earth", 2014, ?
 "Pixote", 1981, ?
@@ -97,7 +55,6 @@ TITLE, YEAR, RATING
 "4 Months, 3 Weeks and 2 Days", 2007, ?
 "Elephant", 2003, ?
 "In the Loop", 2009, ?
-"O Brother, Where Art Thou?", 2000, ?
 "Caché", 2005, ?
 "Once", 2006, ?
 "Gosford Park", 2001, ?
@@ -124,22 +81,61 @@ TITLE, YEAR, RATING
 "Flags of Our Fathers", 2006, ?
 "Evita", 1996, ?
 "The Elephant Man", 1980, ?
-"Easy Rider", 1969, ?
 "Les Miserables", 1998, ?
 "The Texas Chainsaw Massacre", 2003, ?
 "Boys Don't Cry", 1999, ?
-"Casino", 1995, ?
 "Behind Enemy Lines", 2001, ?
 "Scarface", 1983, ?
 "Giant", 1956, ?
 "Brazil", 1985, ?
-"The Manchurian Candidate", 1962, ?
 "Robinson Crusoe", 1997, ?
-"Once Upon a Time in America", 1984, ?
 "The 300 Spartans", 1962, ?
 "Dogville", 2003, ?
 "The War of the Worlds", 1953, ?
 "Ocean's Eleven", 1960, ?
+"O Brother, Where Art Thou?", 2000, 5
+"The Judge", 2014, 4
+"Casino", 1993, 3
+"The Manchurian Candidate", 1962, 5
+"Easy Rider", 1969, 4
+"The Mission", 2004, 4
+"Midnight Run", 1988, 5
+"Once Upon a Time in America", 1984, 5
+"Rose Island", 2020, 4
+"The 5th Wave", 2016, 1
+"The Jackal", 1997, 1
+"Space Sweepers", 2021, 4
+"Finch", 2021, 4
+"News of the World", 2020, 1
+"Malcolm & Marie", 2021, 5
+"Hillbilly Elegy", 2020, 4
+"I Care a Lot", 2020, 5
+"Us", 2019, 5
+"Queen & Slim", 2019, 5
+"Yes Day", 2021, 3
+"Corrina, Corrina", 1994, 2
+"A Ghost Story", 2017, 5
+"Godzilla vs. Kong", 2021, 4
+"Love and Monsters", 2020, 2
+"Still Walking", 2011, 3
+"Radioactive", 2019, 4
+"Run", 2020, 4
+"The Red Sea Diving Resort", 2019, 3
+"Oxygen", 2021, 2
+"Concrete Cowboy", 2021, 2
+"The Wedding Guest", 2018, 3
+"The Poison Rose", 2019, 1
+"The Tomorrow War", 2021, 1
+"Without Remorse", 2021, 2
+"Fear Street: Part One - 1994", 2021, 2
+"Fear Street Part Two: 1978", 2021, 2
+"The Orphanage", 2008, 5
+"Midsommar", 2019, 4
+"21 Bridges", 2019, 3
+"Unhinged", 2020, 2
+"Luca", 2021, 2
+"Blood Red Sky", 2021, 1
+"Dune", 2021, 5
 "The Forum", 2020, 2
 "State of Play", 2009, 3
 "The Devil All the Time", 2020, 5
