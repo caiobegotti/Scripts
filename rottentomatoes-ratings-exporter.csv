@@ -1,56 +1,4 @@
 TITLE, YEAR, RATING
-"I See You", 2019, 3
-"Two Distant Strangers", 2020, 5
-"Backdraft", 1991, 3
-"Friday", 1995, 3
-"Kingdom: Ashin of the North", 2021, 4
-"The End of Evangelion", 1997, 5
-"Ghostbusters: Afterlife", 2021, 4
-"The Accountant", 2016, 3
-"Senior Year", 2022, 1
-"Day Shift", 2022, 3
-"The Guilty", 2021, 4
-"Kate", 2021, 4
-"Coco", 2017, 5
-"Worth", 2020, 3
-"Dark Waters", 2019, 5
-"The Unforgivable", 2021, 2
-"Red Notice", 2021, 2
-"Three Identical Strangers", 2018, 5
-"Finch", 2021, 1
-"A Beautiful Day in the Neighborhood", 2019, 2
-"Don't Look Up", 2021, 4
-"The Matrix Resurrections", 2021, 1
-"Army of the Dead", 2021, 2
-"Yesterday", 2019, 3
-"Unbroken", 2014, 3
-"Encanto", 2021, 2
-"The Tender Bar", 2021, 5
-"Spider-Man: Into the Spider-Verse", 2018, 5
-"Spider-Man: No Way Home", 2021, 3 
-"Gemini Man", 2019, 2
-"The Adam Project", 2022, 1
-"Turning Red", 2022, 5
-"Sonic the Hedgehog 2", 2022, 4
-"Shang-Chi and the Legend of the Ten Rings", 2021, 1
-"Everything Everywhere All at Once", 2022, 5
-"Three Thousand Years of Longing", 2022, 3
-"The Gray Man", 2022, 1
-"Top Gun: Maverick", 2022, 3
-"Moonfall", 2022, 1
-"Doctor Strange in the Multiverse of Madness", 2022, 3
-"Mid90s", 2018, 5
-"Vice", 2018, 3
-"Monster Hunter", 2020, 1
-"Thor", 2011, 1
-"Thor: Love and Thunder", 2022, 4
-"Thor: Ragnarok", 2017, 4
-"Movie 43", 2013, 2
-"Hustle", 2022, 3
-"Don't Breathe", 2016, 2
-"The Woman in the Window", 2021, 3
-"Gonzaga de Pai pra Filho", 2012, 4
-"Bullet Train", 2022, 1
 "Forbidden Planet", 1956, ?
 "The 39 Steps", 1935, ?
 "Aguirre: The Wrath of God", 1972, ?
@@ -145,6 +93,58 @@ TITLE, YEAR, RATING
 "Dogville", 2003, ?
 "The War of the Worlds", 1953, ?
 "Ocean's Eleven", 1960, ?
+"I See You", 2019, 3
+"Two Distant Strangers", 2020, 5
+"Backdraft", 1991, 3
+"Friday", 1995, 3
+"Kingdom: Ashin of the North", 2021, 4
+"The End of Evangelion", 1997, 5
+"Ghostbusters: Afterlife", 2021, 4
+"The Accountant", 2016, 3
+"Senior Year", 2022, 1
+"Day Shift", 2022, 3
+"The Guilty", 2021, 4
+"Kate", 2021, 4
+"Coco", 2017, 5
+"Worth", 2020, 3
+"Dark Waters", 2019, 5
+"The Unforgivable", 2021, 2
+"Red Notice", 2021, 2
+"Three Identical Strangers", 2018, 5
+"Finch", 2021, 1
+"A Beautiful Day in the Neighborhood", 2019, 2
+"Don't Look Up", 2021, 4
+"The Matrix Resurrections", 2021, 1
+"Army of the Dead", 2021, 2
+"Yesterday", 2019, 3
+"Unbroken", 2014, 3
+"Encanto", 2021, 2
+"The Tender Bar", 2021, 5
+"Spider-Man: Into the Spider-Verse", 2018, 5
+"Spider-Man: No Way Home", 2021, 3 
+"Gemini Man", 2019, 2
+"The Adam Project", 2022, 1
+"Turning Red", 2022, 5
+"Sonic the Hedgehog 2", 2022, 4
+"Shang-Chi and the Legend of the Ten Rings", 2021, 1
+"Everything Everywhere All at Once", 2022, 5
+"Three Thousand Years of Longing", 2022, 3
+"The Gray Man", 2022, 1
+"Top Gun: Maverick", 2022, 3
+"Moonfall", 2022, 1
+"Doctor Strange in the Multiverse of Madness", 2022, 3
+"Mid90s", 2018, 5
+"Vice", 2018, 3
+"Monster Hunter", 2020, 1
+"Thor", 2011, 1
+"Thor: Love and Thunder", 2022, 4
+"Thor: Ragnarok", 2017, 4
+"Movie 43", 2013, 2
+"Hustle", 2022, 3
+"Don't Breathe", 2016, 2
+"The Woman in the Window", 2021, 3
+"Gonzaga de Pai pra Filho", 2012, 4
+"Bullet Train", 2022, 1
 "O Brother, Where Art Thou?", 2000, 5
 "The Judge", 2014, 4
 "Casino", 1993, 3
