@@ -12,7 +12,7 @@ TITLE, YEAR, RATING
 "Friedkin Uncut", 2018, ?
 "Captains of the Sands", 2011, ?
 "The Salt of the Earth", 2014, ?
-"Pixote", 1981, ?
+"Pixote", 1981, 4
 "Black Orpheus", 1959, ?
 "O Quatrilho", 1995, ?
 "Sing Street", 2016, ?
@@ -30,7 +30,7 @@ TITLE, YEAR, RATING
 "The Silence", 2015, ?
 "Stoker", 2013, ?
 "Sleep Dealer", 2008, ?
-"Enter the Void", 2009, ?
+"Enter the Void", 2009, 2
 "Equus", 1977, ?
 "The Boss of It All", 2006, ?
 "Koyaanisqatsi", 1982, ?
@@ -38,14 +38,14 @@ TITLE, YEAR, RATING
 "Powaqqatsi", 1988, ?
 "Poe", 2012, ?
 "Eccentricities of a Blond Hair Girl", 2009, ?
-"The Last of the Mohicans", 1992, ?
-"One Flew Over the Cuckoo's Nest", 1975, ?
+"The Last of the Mohicans", 1992, 3
+"One Flew Over the Cuckoo's Nest", 1975, 4
 "The Imaginarium of Doctor Parnassus", 2009, ?
-"Clash of the Titans", 1981, ?
-"Paranormal Activity", 2007, ?
+"Clash of the Titans", 1981, 3
+"Paranormal Activity", 2007, 1
 "Beautiful Boxer", 2004, ?
 "Jaws III", 1983, ?
-"Teenage Mutant Ninja Turtles", 1990, ?
+"Teenage Mutant Ninja Turtles", 1990, 2
 "Reign Over Me", 2007, ?
 "Last Chance Harvey", 2008, ?
 "Good Work", 1999, ?
@@ -79,16 +79,17 @@ TITLE, YEAR, RATING
 "Elizabeth", 1998, ?
 "Young Guns II", 1990, ?
 "Flags of Our Fathers", 2006, ?
-"Evita", 1996, ?
+"Evita", 1996, 1
 "The Elephant Man", 1980, ?
 "Les Miserables", 1998, ?
 "The Texas Chainsaw Massacre", 2003, ?
 "Boys Don't Cry", 1999, ?
-"Behind Enemy Lines", 2001, ?
-"Scarface", 1983, ?
+"Behind Enemy Lines", 2001, 2
+"Scarface", 1983, 2
 "Giant", 1956, ?
 "Brazil", 1985, ?
 "Robinson Crusoe", 1997, ?
+"Crusoe", 1988, 2
 "The 300 Spartans", 1962, ?
 "Dogville", 2003, ?
 "The War of the Worlds", 1953, ?
